@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "609937874521",
+    "project_id": "amcham-app",
+    "storage_bucket": "amcham-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609937874521:android:3d683f96b2970541b05b48",
+        "android_client_info": {
+          "package_name": "com.aidendawes.amcham_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609937874521-pp14c0pn6krv0sku4b6smnd34vqp38v5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvwGZtZgnafQv-H6V7IGKRR3_CW1QasjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609937874521-pp14c0pn6krv0sku4b6smnd34vqp38v5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609937874521:android:1490fbbea4874a4ab05b48",
+        "android_client_info": {
+          "package_name": "com.aidendawes.amcham_app_v2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609937874521-pp14c0pn6krv0sku4b6smnd34vqp38v5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvwGZtZgnafQv-H6V7IGKRR3_CW1QasjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609937874521-pp14c0pn6krv0sku4b6smnd34vqp38v5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
