@@ -81,6 +81,9 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
   String userEmail = FirebaseAuth.instance.currentUser.email;
   bool checkOwnedEvent() {
+    if (item.registeredUsers == null) {
+      return false;
+    }
     List<dynamic> users = item.registeredUsers;
 
     for (var user in users) {
@@ -155,7 +158,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
             //TODO validate whether user has pruchased this item and then write 'owned'
             alignment: Alignment.bottomCenter,
             child: RoundedButton(
-              title: checkOwnedEvent()
+              title: checkOwnedEvent() == true
                   ? 'Registered'
                   : item.price == 0
                       ? 'Register: FREE'
