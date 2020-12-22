@@ -73,6 +73,9 @@ class EventItem extends StatelessWidget {
 
   String TimeToString(int numberTime) {
     String numberStr = numberTime.toString();
+    if (numberStr.length < 4) {
+      numberStr = '0' + numberStr;
+    }
     String hour = numberStr.substring(0, 2);
     String minute = numberStr.substring(2, 4);
     return '$hour:$minute';
