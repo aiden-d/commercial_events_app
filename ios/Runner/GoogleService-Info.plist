@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>609937874521-g2ltlbsql1hc01d31h6kvommlegcf1al.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.609937874521-g2ltlbsql1hc01d31h6kvommlegcf1al</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBhsVs1ICBgqy756utKIoTPF83ZFvhMdvc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>609937874521</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.aidendawes.amchamAppV2</string>
+	<key>PROJECT_ID</key>
+	<string>amcham-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>amcham-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:609937874521:ios:e64f955d6f911317b05b48</string>
+	<key>DATABASE_URL</key>
+	<string>https://amcham-app-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>
