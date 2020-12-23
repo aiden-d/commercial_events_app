@@ -1,3 +1,4 @@
+import 'package:amcham_app_v2/screens/verify_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:amcham_app_v2/constants.dart';
@@ -36,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
   }
 
-  Future<String> _createAccount() async {
+  Future<String> _loginToAccount() async {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: _email, password: _password);
@@ -58,9 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       isLoading = true;
     });
-    String _createAccountFeedback = await _createAccount();
+    String _createAccountFeedback = await _loginToAccount();
+    print(FirebaseAuth.instance.currentUser.emailVerified);
+
     if (_createAccountFeedback != null) {
       _alertDialogBuilder('Error', _createAccountFeedback);
+    } else if (FirebaseAuth.instance.currentUser.emailVerified == false) {
+      Navigator.push(
+          (context), MaterialPageRoute(builder: (context) => VerifyScreen()));
     } else {
       Navigator.pop(context);
     }
