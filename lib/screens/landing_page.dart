@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'events_screen.dart';
 import 'package:amcham_app_v2/size_config.dart';
+import 'verify_screen.dart';
 
 class LandingPage extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
@@ -35,8 +36,14 @@ class LandingPage extends StatelessWidget {
                       return HomePage();
                     } else {
                       print('logged in');
+                      if (FirebaseAuth.instance.currentUser.emailVerified ==
+                          false) {
+                        return VerifyScreen();
+                      } else {
+                        return EventsScreen();
+                      }
                       //user is logged in
-                      return EventsScreen();
+
                     }
                   }
                   return Scaffold(

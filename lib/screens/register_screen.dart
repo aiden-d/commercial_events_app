@@ -8,6 +8,7 @@ import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:amcham_app_v2/components/amcham_logo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'verify_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -82,7 +83,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _alertDialogBuilder(_createAccountFeedback);
     } else {
       await addUserInfo();
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: ((context) => VerifyScreen())));
+      //Navigator.pop(context);
     }
     setState(() {
       isLoading = false;
