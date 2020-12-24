@@ -51,11 +51,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
     super.dispose();
   }
 
-  @override
-  void sendMail() {
+  void sendMail() async {
     user = auth.currentUser;
-    user.sendEmailVerification();
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    await user.sendEmailVerification();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       checkEmailVerified();
     });
   }
@@ -87,10 +86,18 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   horizontal: 20,
                   vertical: 40,
                 ),
-                child: Text(
-                  'An email has been sent to ${auth.currentUser.email} please verify before logging in...',
-                  style: Constants.logoTitleStyle,
-                  textAlign: TextAlign.center,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 40,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.white),
+                  child: Text(
+                    'An email has been sent to ${auth.currentUser.email} please verify before logging in...',
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
                 ),
               ),
               RoundedButton(
