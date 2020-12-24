@@ -60,7 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
     String _createAccountFeedback = await _loginToAccount();
-    print(FirebaseAuth.instance.currentUser.emailVerified);
 
     if (_createAccountFeedback != null) {
       _alertDialogBuilder('Error', _createAccountFeedback);
