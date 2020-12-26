@@ -97,6 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String _lastName = "";
   String _email = "";
   String _password = "";
+  String _passwordConf = "";
   String _company = "";
   FocusNode _lastNameFocusNode;
   FocusNode _companyFocusNode;
@@ -123,6 +124,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordConfFocusNode.dispose();
     // TODO: implement dispose
     super.dispose();
+  }
+
+  bool validateFields() {
+    if (_firstName == "") {
+      _alertDialogBuilder('First Name cannot be empty');
+      return false;
+    }
+    if (_lastName == "") {
+      _alertDialogBuilder('Last name cannot be empty');
+      return false;
+    }
+    if (_company == "") {
+      _alertDialogBuilder('Company cannot be empty');
+      return false;
+    }
+    if (_email == "") {
+      _alertDialogBuilder('Email cannot be empty');
+      return false;
+    }
+    if (_password == "") {
+      _alertDialogBuilder('Password cannot be empty');
+      return false;
+    }
+    if (_passwordConf == "") {
+      _alertDialogBuilder('Password confirmation cannot be empty');
+      return false;
+    }
+    if (_passwordConf != _password) {
+      _alertDialogBuilder('Passwords do not match');
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -244,8 +277,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'Confirm Password',
                     focusNode: _passwordConfFocusNode,
                     isPasswordField: true,
+                    onChanged: (value) {
+                      _passwordConf = value;
+                    },
                     onSubmitted: (value) {
-                      _submitForm();
+                      if (validateFields() == true) {
+                        _submitForm();
+                      }
                     },
 
                     //TODO: impliment password checking functionality
@@ -253,8 +291,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   RoundedButton(
                     onPressed: () {
                       //_alertDialogBuilder();
-
-                      _submitForm();
+                      if (validateFields() == true) {
+                        _submitForm();
+                      }
                     },
                     isLoading: isLoading,
                     title: 'Register',
