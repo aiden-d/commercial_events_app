@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'single_event_screen.dart';
 import 'package:amcham_app_v2/components/get_firebase_image.dart';
 import 'package:amcham_app_v2/components/event_item.dart';
+import 'package:amcham_app_v2/scripts/member_checker.dart';
 
 final _firestore = Firestore.instance;
 firebase_storage.FirebaseStorage storage =
@@ -44,7 +45,18 @@ class _EventsScreenState extends State<EventsScreen> {
   @override
   void initState() {
     getData();
+    getIfMember();
     super.initState();
+  }
+
+  MemberChecker memberChecker = new MemberChecker();
+  Future<void> getIfMember() async {
+    String email = FirebaseAuth.instance.currentUser.email;
+    await memberChecker.updateEndings();
+  }
+
+  printMember() {
+    String email = FirebaseAuth.instance.currentUser.email;
   }
 
   @override

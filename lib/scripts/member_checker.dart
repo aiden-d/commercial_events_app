@@ -5,8 +5,9 @@ class MemberChecker {
   final firestore = Firestore.instance;
   final userEmail = FirebaseAuth.instance.currentUser.email;
   static bool isMember = false;
-  static List<String> emailEndings = [];
+  static List emailEndings = [];
 //TODO create update endings fucntion
+  MemberChecker();
   void main() {
     checkIfMember('aidendawes@gmail.com');
   }
@@ -16,13 +17,15 @@ class MemberChecker {
       print('emails ending null');
       return false;
     }
-    for (String e in emailEndings) {
+    for (var _end in emailEndings) {
+      String e = _end.toString();
       int start = email.length - e.length;
       int end = start + e.length;
       String newEnding = email.substring(start, end);
       print(newEnding);
       if (newEnding == e) {
         isMember = true;
+        return true;
       }
     }
     return false;
@@ -35,7 +38,13 @@ class MemberChecker {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        emailEndings = documentSnapshot.data('member_emails');
+        emailEndings = documentSnapshot.data()['member_emails'];
+        print('endings exist');
+        print(checkIfMember(userEmail));
+
+        return print(emailEndings);
+      } else {
+        return print('does not exist');
       }
     });
   }

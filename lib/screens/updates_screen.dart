@@ -15,11 +15,11 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
     return Scaffold(
       bottomNavigationBar: BottomBar(),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(),
-          Center(child: Text('Updates Screen')),
+          Center(child: Text('News Screen Coming Soon')),
         ],
       ),
     );

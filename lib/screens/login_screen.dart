@@ -1,4 +1,5 @@
 import 'package:amcham_app_v2/screens/verify_screen.dart';
+import 'package:amcham_app_v2/scripts/member_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:amcham_app_v2/constants.dart';

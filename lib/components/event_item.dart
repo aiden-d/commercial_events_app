@@ -3,8 +3,10 @@ import 'package:amcham_app_v2/screens/single_event_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amcham_app_v2/constants.dart';
 import 'get_firebase_image.dart';
+import 'package:amcham_app_v2/scripts/member_checker.dart';
 
 class EventItem extends StatelessWidget {
+  MemberChecker memberChecker = new MemberChecker();
   final int price;
   //date must be formated as year/month/day
   final int date;
@@ -116,9 +118,11 @@ class EventItem extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  price == 0 || price == null ? 'FREE' : 'R$price',
+                  MemberChecker.isMember == true
+                      ? 'FREE ACCESS'
+                      : (price == 0 || price == null ? 'FREE' : 'R$price'),
                   style: TextStyle(color: Colors.red[900], fontSize: 16),
-                )
+                ),
               ],
             ),
             Padding(

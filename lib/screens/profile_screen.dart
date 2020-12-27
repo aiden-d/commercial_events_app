@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:amcham_app_v2/components/rounded_text_field.dart';
 import 'package:amcham_app_v2/size_config.dart';
+import 'package:amcham_app_v2/scripts/member_checker.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -49,8 +50,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     User user = FirebaseAuth.instance.currentUser;
     email = user.email;
     getInfo();
+    getIfMember();
 
     super.initState();
+  }
+
+  MemberChecker memberChecker = new MemberChecker();
+  Future<void> getIfMember() async {
+    setState(() async {
+      String email = FirebaseAuth.instance.currentUser.email;
+      await memberChecker.updateEndings();
+    });
   }
 
   CollectionReference users = FirebaseFirestore.instance.collection('UserInfo');
@@ -116,6 +126,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       SizedBox(
                         height: 50,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              MemberChecker.isMember == true
+                                  ? 'AMCHAM member'
+                                  : 'Not an AMCHAM member',
+                              style: Constants.blueText,
+                            )
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
