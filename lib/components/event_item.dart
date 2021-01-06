@@ -98,7 +98,7 @@ class EventItem extends StatelessWidget {
             },
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         color: Colors.white,
         child: Column(
           children: [
@@ -121,7 +121,7 @@ class EventItem extends StatelessWidget {
                   MemberChecker.isMember == true
                       ? 'FREE ACCESS'
                       : (price == 0 || price == null ? 'FREE' : 'R$price'),
-                  style: TextStyle(color: Colors.red[900], fontSize: 16),
+                  style: TextStyle(color: Colors.red[900], fontSize: 14),
                 ),
               ],
             ),

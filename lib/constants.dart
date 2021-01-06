@@ -9,6 +9,7 @@ class Constants {
       fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.black);
   static const logoTitleStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
+  static const whiteTextStyle = TextStyle(fontSize: 14, color: Colors.white);
   static const logoTitleStyleRed = TextStyle(
     fontSize: 30,
     fontWeight: FontWeight.bold,
@@ -22,6 +23,7 @@ class Constants {
     ],
   );
   static const blueThemeColor = Color.fromARGB(1000, 26, 66, 117);
+  static const darkBlueThemeColor = Color.fromARGB(1000, 13, 38, 67);
   static const blueText =
       TextStyle(fontSize: 25, color: Constants.blueThemeColor);
 }

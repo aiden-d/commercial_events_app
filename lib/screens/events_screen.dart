@@ -25,6 +25,8 @@ class _EventsScreenState extends State<EventsScreen> {
   static var test;
   int _selectedIndex = 0;
   Container eventItems = Container();
+  bool isPastEvents = false;
+  bool isMyEvents = false;
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -67,15 +69,175 @@ class _EventsScreenState extends State<EventsScreen> {
         backgroundColor: Constants.blueThemeColor,
       ),
       backgroundColor: Colors.grey[100],
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         //crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: isPastEvents != true
+                        ? Constants.darkBlueThemeColor
+                        : Constants.blueThemeColor,
+                  ),
+                  child: MaterialButton(
+                    child: Text(
+                      'Upcoming Events',
+                      style: Constants.whiteTextStyle,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPastEvents = false;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: isPastEvents == true
+                        ? Constants.darkBlueThemeColor
+                        : Constants.blueThemeColor,
+                  ),
+                  child: MaterialButton(
+                    child: Text(
+                      'Past Events',
+                      style: Constants.whiteTextStyle,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPastEvents = true;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              //TODO add categories
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Container(
+              //     height: 30,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(15),
+              //       color: Constants.blueThemeColor,
+              //     ),
+              //     child: IconButton(
+              //       icon: Icon(
+              //         Icons.format_list_bulleted,
+              //         color: Colors.white,
+              //         size: 20,
+              //       ),
+              //       onPressed: () {},
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: isMyEvents != true
+                        ? Constants.darkBlueThemeColor
+                        : Constants.blueThemeColor,
+                  ),
+                  child: MaterialButton(
+                    child: Text(
+                      'All Events',
+                      style: Constants.whiteTextStyle,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isMyEvents = false;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: isMyEvents == true
+                        ? Constants.darkBlueThemeColor
+                        : Constants.blueThemeColor,
+                  ),
+                  child: MaterialButton(
+                    child: Text(
+                      'My Events',
+                      style: Constants.whiteTextStyle,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isMyEvents = true;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              //TODO add categories
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Container(
+              //     height: 30,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(15),
+              //       color: Constants.blueThemeColor,
+              //     ),
+              //     child: IconButton(
+              //       icon: Icon(
+              //         Icons.format_list_bulleted,
+              //         color: Colors.white,
+              //         size: 20,
+              //       ),
+              //       onPressed: () {},
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
           Expanded(
             child: Container(
               //height: MediaQuery.of(context).size.height - SizeConfig().getBlockSizeVertical() * 22,
-              child: EventsStream(),
+              child: isMyEvents == true
+                  ? (isPastEvents != true
+                      ? EventsStream(
+                          isPastEvents: false,
+                          isMyEvents: true,
+                        )
+                      : EventsStream(
+                          isPastEvents: true,
+                          isMyEvents: true,
+                        ))
+                  : isPastEvents != true
+                      ? EventsStream(
+                          isPastEvents: false,
+                          isMyEvents: false,
+                        )
+                      : EventsStream(
+                          isPastEvents: true,
+                          isMyEvents: false,
+                        ),
               // child: ListView(
               //   padding: const EdgeInsets.all(8),
               //   children: [
@@ -99,6 +261,41 @@ class _EventsScreenState extends State<EventsScreen> {
 
 class EventsStream extends StatelessWidget {
   CollectionReference eventsRef = _firestore.collection('Events');
+  final bool isPastEvents;
+  final bool isMyEvents;
+  EventsStream({@required this.isPastEvents, @required this.isMyEvents});
+
+  EventItem getItem(Map<String, dynamic> data, String id) {
+    return new EventItem(
+      price: data['price'],
+      date: data['date'],
+      title: data['title'],
+      type: data['type'],
+      category: data['category'],
+      isMembersOnly: data['isMembersOnly'],
+      summary: data['summary'],
+      imageRef: data['image_name'],
+      info: data['info'],
+      id: id,
+      link: data['link'],
+      registeredUsers: data['registered_users'],
+      endTime: data['end_time'],
+      startTime: data['start_time'],
+    );
+  }
+
+  bool getIfMyEvent(Map<String, dynamic> data) {
+    String userEmail = FirebaseAuth.instance.currentUser.email;
+    List registeredUsers = data['registered_users'];
+
+    if (registeredUsers == null) return false;
+    for (var ru in registeredUsers) {
+      if (ru == userEmail) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,49 +315,78 @@ class EventsStream extends StatelessWidget {
             DateTime date = new DateTime(now.year, now.month, now.day);
             String dateString = '${date.year}${date.month}${date.day}';
             int dateInt = int.parse(dateString);
-            //TODO make category for past events
-            if (eventDate >= dateInt) {
-              EventItem eventItem = new EventItem(
-                price: data['price'],
-                date: data['date'],
-                title: data['title'],
-                type: data['type'],
-                category: data['category'],
-                isMembersOnly: data['isMembersOnly'],
-                summary: data['summary'],
-                imageRef: data['image_name'],
-                info: data['info'],
-                id: event.id,
-                link: data['link'],
-                registeredUsers: data['registered_users'],
-                endTime: data['end_time'],
-                startTime: data['start_time'],
-              );
-              eventItems.add(eventItem);
-            }
-          }
-          int size = eventItems.length;
-          if (size > 1) {
-            bool isNotSorted = true;
-            while (isNotSorted) {
-              isNotSorted = false;
-              int i = 0;
-              while (i + 1 < size) {
-                if (eventItems[i].date > eventItems[i + 1].date) {
-                  var temp = eventItems[i + 1];
-                  eventItems[i + 1] = eventItems[i];
-                  eventItems[i] = temp;
-                  isNotSorted = true;
+            if (isMyEvents) {
+              if (getIfMyEvent(data) == true) {
+                if (isPastEvents == true) {
+                  if (eventDate <= dateInt) {
+                    EventItem eventItem = getItem(data, event.id);
+                    eventItems.add(eventItem);
+                  }
+                } else {
+                  if (eventDate >= dateInt) {
+                    EventItem eventItem = getItem(data, event.id);
+                    eventItems.add(eventItem);
+                  }
                 }
-                i += 1;
-                print('running');
+              }
+            } else if (isPastEvents == true) {
+              if (eventDate <= dateInt) {
+                EventItem eventItem = getItem(data, event.id);
+                eventItems.add(eventItem);
+              }
+            } else {
+              if (eventDate >= dateInt) {
+                EventItem eventItem = getItem(data, event.id);
+                eventItems.add(eventItem);
               }
             }
           }
 
-          return ListView(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-            children: eventItems,
+          if (isPastEvents == true) {
+            int size = eventItems.length;
+            if (size > 1) {
+              bool isNotSorted = true;
+              while (isNotSorted) {
+                isNotSorted = false;
+                int i = 0;
+                while (i + 1 < size) {
+                  if (eventItems[i].date < eventItems[i + 1].date) {
+                    var temp = eventItems[i + 1];
+                    eventItems[i + 1] = eventItems[i];
+                    eventItems[i] = temp;
+                    isNotSorted = true;
+                  }
+                  i += 1;
+                  print('running');
+                }
+              }
+            }
+          } else {
+            int size = eventItems.length;
+            if (size > 1) {
+              bool isNotSorted = true;
+              while (isNotSorted) {
+                isNotSorted = false;
+                int i = 0;
+                while (i + 1 < size) {
+                  if (eventItems[i].date > eventItems[i + 1].date) {
+                    var temp = eventItems[i + 1];
+                    eventItems[i + 1] = eventItems[i];
+                    eventItems[i] = temp;
+                    isNotSorted = true;
+                  }
+                  i += 1;
+                  print('running');
+                }
+              }
+            }
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: eventItems,
+            ),
           );
         }
         return Center(
