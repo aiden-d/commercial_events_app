@@ -57,6 +57,7 @@ class RoundedTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(radius != null ? radius : 15)),
         child: Center(
           child: TextField(
+            style: textStyle,
             controller: TextEditingController(text: textValue),
             obscureText: _isPasswordField,
             textInputAction: textInputAction,
@@ -64,6 +65,9 @@ class RoundedTextField extends StatelessWidget {
             focusNode: focusNode,
             onSubmitted: onSubmitted,
             decoration: InputDecoration(
+              counterStyle: textStyle,
+              labelStyle: textStyle,
+              helperStyle: textStyle,
               border: InputBorder.none,
               hintText: hintText != null ? hintText : 'Enter a search term',
               hintStyle: TextStyle(),

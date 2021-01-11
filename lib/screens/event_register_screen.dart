@@ -152,9 +152,8 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
 
   void addToCalendar() {
     Event event = Event(
-      title: 'Amcham event',
+      title: eventItem.title,
       description: '${eventItem.link}',
-      location: 'Event location',
       startDate: getDateFromItem(eventItem.startTime),
       endDate: getDateFromItem(eventItem.endTime),
     );

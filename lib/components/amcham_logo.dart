@@ -6,7 +6,7 @@ class AmchamLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.safeBlockHorizontal * 80,
+      width: SizeConfig.safeBlockHorizontal * 70,
       child: Image.asset('lib/images/fulllogo.png'),
     );
   }

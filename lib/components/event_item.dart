@@ -23,6 +23,10 @@ class EventItem extends StatelessWidget {
   final String id;
   final String link;
   final List<dynamic> registeredUsers;
+  final List<BigInt> tier1hashes;
+  final List<BigInt> tier2hashes;
+  final List<BigInt> tier3hashes;
+  final List<BigInt> tier4hashes;
   bool isButton;
   bool showInfo;
   bool hideSummary;
@@ -45,7 +49,41 @@ class EventItem extends StatelessWidget {
     @required this.registeredUsers,
     @required this.startTime,
     @required this.endTime,
+    @required this.tier1hashes,
+    @required this.tier2hashes,
+    @required this.tier3hashes,
+    @required this.tier4hashes,
   });
+  int rankedPoints;
+  int getPointsFromHashes(List<BigInt> searchHashes) {
+    print('h1 hashes = $tier1hashes');
+    int points = 0;
+    for (BigInt searchHash in searchHashes) {
+      for (BigInt hash in tier1hashes) {
+        if (hash == searchHash) {
+          points += 100;
+        }
+      }
+      for (BigInt hash in tier2hashes) {
+        if (hash == searchHash) {
+          points += 75;
+        }
+      }
+      for (BigInt hash in tier3hashes) {
+        if (hash == searchHash) {
+          points += 30;
+        }
+      }
+      // for (int hash in tier4hashes) {
+      //   if (hash == searchHash) {
+      //     points += 15;
+      //   }
+      // }
+      //Commented out to increase performance and battery
+    }
+    rankedPoints = points;
+    return points;
+  }
 
   //date must be formated as year/month/day
   String DateToString(int numberDate) {

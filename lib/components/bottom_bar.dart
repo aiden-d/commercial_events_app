@@ -57,17 +57,15 @@ class _BottomBarState extends State<BottomBar> {
                     ? Constants.blueThemeColor
                     : Colors.black,
                 onPressed: () {
-                  if (isButton1Active != true) {
-                    setState(() {
-                      isButton1Active = true;
-                      isButton2Active = false;
-                      isButton3Active = false;
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UpdatesScreen()));
-                    });
-                  }
+                  setState(() {
+                    isButton1Active = true;
+                    isButton2Active = false;
+                    isButton3Active = false;
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdatesScreen()));
+                  });
                 },
               ),
               IconButton(
@@ -76,17 +74,15 @@ class _BottomBarState extends State<BottomBar> {
                     ? Constants.blueThemeColor
                     : Colors.black,
                 onPressed: () {
-                  if (isButton2Active != true) {
-                    setState(() {
-                      isButton1Active = false;
-                      isButton2Active = true;
-                      isButton3Active = false;
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EventsScreen()));
-                    });
-                  }
+                  setState(() {
+                    isButton1Active = false;
+                    isButton2Active = true;
+                    isButton3Active = false;
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EventsScreen()));
+                  });
                 },
               ),
               IconButton(
@@ -95,17 +91,15 @@ class _BottomBarState extends State<BottomBar> {
                     ? Constants.blueThemeColor
                     : Colors.black,
                 onPressed: () {
-                  if (isButton3Active != true) {
-                    setState(() {
-                      isButton1Active = false;
-                      isButton2Active = false;
-                      isButton3Active = true;
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileScreen()));
-                    });
-                  }
+                  setState(() {
+                    isButton1Active = false;
+                    isButton2Active = false;
+                    isButton3Active = true;
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProfileScreen()));
+                  });
                 },
               ),
             ],
