@@ -56,10 +56,10 @@ class EventItem extends StatelessWidget {
   });
   int rankedPoints;
   int getPointsFromHashes(List<BigInt> searchHashes) {
-    print('h1 hashes = $tier1hashes');
     int points = 0;
     for (BigInt searchHash in searchHashes) {
       for (BigInt hash in tier1hashes) {
+        print('tier 1 does not match');
         if (hash == searchHash) {
           points += 100;
         }

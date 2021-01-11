@@ -97,13 +97,11 @@ class _EventsScreenState extends State<EventsScreen> {
     int i = 0;
 
     List<int> list = utf8.encode(str);
-    print('encoded = $list');
+
     for (int i in list) {
-      print(i);
       _hash = ((_hash << 5) + _hash) + BigInt.from(i);
-      print('_hash = $_hash');
     }
-    print('hash in func = $_hash');
+
     return _hash;
   }
 
@@ -117,9 +115,8 @@ class _EventsScreenState extends State<EventsScreen> {
     List<BigInt> searchHashes = [];
     List<String> words = seperateWords(searchStr);
     for (String w in words) {
-      print("w = '$w'");
       BigInt hash = DJBHash(w);
-      print('hash = $hash');
+
       searchHashes.add(hash);
     }
     setState(() {
@@ -146,7 +143,6 @@ class _EventsScreenState extends State<EventsScreen> {
                       searchString = value;
                     },
                     onSubmitted: (value) {
-                      print(searchString);
                       search(searchString);
                     },
                     textStyle: TextStyle(
@@ -394,8 +390,9 @@ class EventsStream extends StatelessWidget {
     try {
       List<BigInt> newList = [];
       for (var x in list) {
-        newList.add(x);
+        newList.add(BigInt.from(x));
       }
+
       return newList;
     } catch (e) {
       print(e);
@@ -483,7 +480,6 @@ class EventsStream extends StatelessWidget {
             }
           }
           if (isSearching == true) {
-            print('search hash = ' + searchHash.toString() + "'''");
             for (EventItem e in eventItems) {
               if (searchHash == null) {
                 print('search hashes  null');
