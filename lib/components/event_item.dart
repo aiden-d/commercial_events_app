@@ -61,6 +61,7 @@ class EventItem extends StatelessWidget {
       for (BigInt hash in tier1hashes) {
         print('tier 1 does not match');
         if (hash == searchHash) {
+          print('tier 1 does match');
           points += 100;
         }
       }
@@ -80,7 +81,9 @@ class EventItem extends StatelessWidget {
       //   }
       // }
       //Commented out to increase performance and battery
+
     }
+    print('points = $points');
     rankedPoints = points;
     return points;
   }

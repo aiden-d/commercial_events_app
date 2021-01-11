@@ -492,20 +492,19 @@ class EventsStream extends StatelessWidget {
             while (isNotSorted) {
               isNotSorted = false;
               int i = 0;
-              while (i + 1 < size) {
-                if (eventItems[i + 1].rankedPoints == 0) {
-                  eventItems.remove(eventItems[i]);
-                  i = 0;
-                }
+              while (i < size) {
                 if (eventItems[i].rankedPoints == 0) {
                   eventItems.remove(eventItems[i]);
+                  size = eventItems.length;
                   i = 0;
-                } else if (eventItems[i].rankedPoints <
-                    eventItems[i + 1].rankedPoints) {
-                  var temp = eventItems[i + 1];
-                  eventItems[i + 1] = eventItems[i];
-                  eventItems[i] = temp;
-                  isNotSorted = true;
+                } else if (i < size - 1) {
+                  if (eventItems[i].rankedPoints <
+                      eventItems[i + 1].rankedPoints) {
+                    var temp = eventItems[i + 1];
+                    eventItems[i + 1] = eventItems[i];
+                    eventItems[i] = temp;
+                    isNotSorted = true;
+                  }
                 }
                 i += 1;
               }
