@@ -59,9 +59,7 @@ class EventItem extends StatelessWidget {
     int points = 0;
     for (BigInt searchHash in searchHashes) {
       for (BigInt hash in tier1hashes) {
-        print('tier 1 does not match');
         if (hash == searchHash) {
-          print('tier 1 does match');
           points += 100;
         }
       }

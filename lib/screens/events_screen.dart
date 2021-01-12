@@ -96,7 +96,7 @@ class _EventsScreenState extends State<EventsScreen> {
     BigInt _hash = BigInt.from(5381);
     int i = 0;
 
-    List<int> list = utf8.encode(str);
+    List<int> list = utf8.encode(str.toLowerCase());
 
     for (int i in list) {
       _hash = ((_hash << 5) + _hash) + BigInt.from(i);
@@ -496,7 +496,7 @@ class EventsStream extends StatelessWidget {
                 if (eventItems[i].rankedPoints == 0) {
                   eventItems.remove(eventItems[i]);
                   size = eventItems.length;
-                  i = 0;
+                  i = -1;
                 } else if (i < size - 1) {
                   if (eventItems[i].rankedPoints <
                       eventItems[i + 1].rankedPoints) {
