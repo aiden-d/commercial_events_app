@@ -75,6 +75,11 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
         item.isInfoSelected = false;
       });
     };
+    print('speakers = ${item.speakers}');
+    speakersList = new SpeakersList(
+      speakers: item.speakers,
+    );
+    speakersList.generateSpeakers();
 
     super.initState();
   }
@@ -96,6 +101,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   }
 
   _SingleEventScreenState({@required this.item});
+  SpeakersList speakersList = new SpeakersList();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,9 +154,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Text(item.info),
                       )
-                    : Container(
-                        //TODO add speaker functionality
-                        ),
+                    : speakersList,
               ],
             ),
           ),
@@ -183,6 +187,45 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SpeakersList extends StatelessWidget {
+  final List speakers;
+  SpeakersList({this.speakers});
+  List<SpeakerItem> speakerItemList = [];
+  void generateSpeakers() {
+    print('speaekrs 2 = $speakers');
+    for (String s in speakers) {
+      speakerItemList.add(SpeakerItem(
+        title: s,
+      ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: speakerItemList,
+      ),
+    );
+  }
+}
+
+class SpeakerItem extends StatelessWidget {
+  final String title;
+  SpeakerItem({this.title});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Text(
+        '- $title',
+        style: TextStyle(color: Constants.darkBlueThemeColor, fontSize: 20),
       ),
     );
   }

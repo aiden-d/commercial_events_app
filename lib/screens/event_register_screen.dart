@@ -54,6 +54,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
       }
       return false;
     }
+    return false;
   }
 
   Future<void> updateUser() async {
@@ -135,9 +136,9 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
       ..from = Address(username, 'Amcham Events')
       ..recipients.add(userEmail) //recipent email
       ..subject =
-          'Thank you for signing up for the ${eventItem.title}' //subject of the email
+          'Thank you for signing up for ${eventItem.title}' //subject of the email
       ..text =
-          'Thank you for signing up for the ${eventItem.title}\nPlease acess the event at the date..... with the link: ${eventItem.link}'; //body of the email
+          'Thank you for signing up for ${eventItem.title}\nPlease acess the event at the date..... with the link: ${eventItem.link}'; //body of the email
 
     try {
       final sendReport = await send(message, smtpServer);
@@ -217,14 +218,14 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Purchase Sucessful!',
+                    'Registration Successful!',
                     style: Constants.logoTitleStyle,
                   ),
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 8,
                   ),
                   Text(
-                    'How would you like to recieve access?',
+                    'How would you like to recieve the link?',
                     style: TextStyle(color: Colors.white, fontSize: 22),
                     textAlign: TextAlign.center,
                   ),

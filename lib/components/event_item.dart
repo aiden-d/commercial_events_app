@@ -27,6 +27,7 @@ class EventItem extends StatelessWidget {
   final List<BigInt> tier2hashes;
   final List<BigInt> tier3hashes;
   final List<BigInt> tier4hashes;
+  final List speakers;
   bool isButton;
   bool showInfo;
   bool hideSummary;
@@ -53,6 +54,7 @@ class EventItem extends StatelessWidget {
     @required this.tier2hashes,
     @required this.tier3hashes,
     @required this.tier4hashes,
+    @required this.speakers,
   });
   int rankedPoints;
   int getPointsFromHashes(List<BigInt> searchHashes) {

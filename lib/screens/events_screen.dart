@@ -419,6 +419,7 @@ class EventsStream extends StatelessWidget {
       tier2hashes: castListToBigInt(data['tier_2_hashes']),
       tier3hashes: castListToBigInt(data['tier_3_hashes']),
       tier4hashes: castListToBigInt(data['tier_4_hashes']),
+      speakers: data['speakers'],
     );
   }
 
