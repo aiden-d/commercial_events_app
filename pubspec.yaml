@@ -30,6 +30,7 @@ dependencies:
   firebase_storage: ^5.2.0
   mailer: ^3.2.1
   add_2_calendar: ^1.4.0
+  flutter_launcher_icons: ^0.8.1
 
 
 
@@ -43,6 +44,10 @@ dev_dependencies:
   integration_test:
     sdk: flutter
 
+flutter_icons:
+  image_path: "lib/icon/icon.png"
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

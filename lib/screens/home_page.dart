@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                   textStyle: Constants.blueText,
                   radius: 15,
                   height: 80,
-                  width: 1000,
+                  width: 430,
                 ),
                 SizedBox(
                   height: 20,
