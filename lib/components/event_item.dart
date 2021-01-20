@@ -23,10 +23,10 @@ class EventItem extends StatelessWidget {
   final String id;
   final String link;
   final List<dynamic> registeredUsers;
-  final List<BigInt> tier1hashes;
-  final List<BigInt> tier2hashes;
-  final List<BigInt> tier3hashes;
-  final List<BigInt> tier4hashes;
+  final List tier1hashes;
+  final List tier2hashes;
+  final List tier3hashes;
+  final List tier4hashes;
   final List speakers;
   bool isButton;
   bool showInfo;
@@ -57,20 +57,20 @@ class EventItem extends StatelessWidget {
     @required this.speakers,
   });
   int rankedPoints;
-  int getPointsFromHashes(List<BigInt> searchHashes) {
+  int getPointsFromHashes(List<int> searchHashes) {
     int points = 0;
-    for (BigInt searchHash in searchHashes) {
-      for (BigInt hash in tier1hashes) {
+    for (int searchHash in searchHashes) {
+      for (var hash in tier1hashes) {
         if (hash == searchHash) {
           points += 100;
         }
       }
-      for (BigInt hash in tier2hashes) {
+      for (var hash in tier2hashes) {
         if (hash == searchHash) {
           points += 75;
         }
       }
-      for (BigInt hash in tier3hashes) {
+      for (var hash in tier3hashes) {
         if (hash == searchHash) {
           points += 30;
         }
