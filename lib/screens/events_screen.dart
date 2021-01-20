@@ -30,7 +30,7 @@ class _EventsScreenState extends State<EventsScreen> {
   bool isPastEvents = false;
   bool isMyEvents = false;
   bool isSearching = false;
-  List<BigInt> searchHash = [];
+  List<int> searchHash = [];
   String searchString = '';
   void _onItemTapped(int index) {
     setState(() {
@@ -91,20 +91,6 @@ class _EventsScreenState extends State<EventsScreen> {
     return words;
   }
 
-  BigInt DJBHash(String str) {
-    int len = str.length;
-    BigInt _hash = BigInt.from(5381);
-    int i = 0;
-
-    List<int> list = utf8.encode(str.toLowerCase());
-
-    for (int i in list) {
-      _hash = ((_hash << 5) + _hash) + BigInt.from(i);
-    }
-
-    return _hash;
-  }
-
   void search(String _searchString) {
     String searchStr = _searchString.trim();
     searchHash = [];
@@ -112,11 +98,11 @@ class _EventsScreenState extends State<EventsScreen> {
       isSearching = false;
       return;
     }
-    List<BigInt> searchHashes = [];
+    List<int> searchHashes = [];
     List<String> words = seperateWords(searchStr);
     for (String w in words) {
-      BigInt hash = DJBHash(w);
-
+      int hash = generateSimpleHash(w.toLowerCase());
+      print('hash = $hash');
       searchHashes.add(hash);
     }
     setState(() {
@@ -124,6 +110,132 @@ class _EventsScreenState extends State<EventsScreen> {
       searchHash = searchHashes;
       isSearching = true;
     });
+  }
+
+  int generateSimpleHash(String str) {
+    int length = str.length;
+    int i = 0;
+    String s = '';
+    while (i < length) {
+      s = s + getPlaceInAlphabet(str[i]).toString() + '0';
+      i++;
+    }
+    if (s.length < 18) {
+      s = s.substring(0, s.length);
+    } else {
+      s = s.substring(0, 18);
+    }
+
+    return int.parse(s);
+  }
+
+  int getPlaceInAlphabet(String str) {
+    if (str == 'a') {
+      return 1;
+    }
+    if (str == 'b') {
+      return 2;
+    }
+    if (str == 'c') {
+      return 3;
+    }
+    if (str == 'd') {
+      return 4;
+    }
+    if (str == 'e') {
+      return 5;
+    }
+    if (str == 'f') {
+      return 6;
+    }
+    if (str == 'g') {
+      return 7;
+    }
+    if (str == 'h') {
+      return 8;
+    }
+    if (str == 'i') {
+      return 9;
+    }
+    if (str == 'j') {
+      return 10;
+    }
+    if (str == 'k') {
+      return 11;
+    }
+    if (str == 'l') {
+      return 12;
+    }
+    if (str == 'm') {
+      return 13;
+    }
+    if (str == 'n') {
+      return 14;
+    }
+    if (str == 'o') {
+      return 15;
+    }
+    if (str == 'p') {
+      return 16;
+    }
+    if (str == 'q') {
+      return 17;
+    }
+    if (str == 'r') {
+      return 18;
+    }
+    if (str == 's') {
+      return 19;
+    }
+    if (str == 't') {
+      return 20;
+    }
+    if (str == 'u') {
+      return 21;
+    }
+    if (str == 'v') {
+      return 22;
+    }
+    if (str == 'w') {
+      return 23;
+    }
+    if (str == 'x') {
+      return 24;
+    }
+    if (str == 'y') {
+      return 25;
+    }
+    if (str == 'z') {
+      return 26;
+    }
+    if (str == '1') {
+      return 27;
+    }
+    if (str == '2') {
+      return 28;
+    }
+    if (str == '3') {
+      return 29;
+    }
+    if (str == '4') {
+      return 30;
+    }
+    if (str == '5') {
+      return 31;
+    }
+    if (str == '6') {
+      return 32;
+    }
+    if (str == '7') {
+      return 33;
+    }
+    if (str == '8') {
+      return 34;
+    }
+    if (str == '9') {
+      return 35;
+    }
+    return 36;
   }
 
   @override
@@ -134,41 +246,47 @@ class _EventsScreenState extends State<EventsScreen> {
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
           flexibleSpace: SafeArea(
-            child: Row(
-              children: [
-                Expanded(
-                  child: RoundedTextField(
-                    textValue: searchString,
-                    onChanged: (value) {
-                      searchString = value;
-                    },
-                    onSubmitted: (value) {
-                      search(searchString);
-                    },
-                    textStyle: TextStyle(
-                      fontSize: 10,
+            child: Center(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CupertinoTextField(
+                        placeholder: 'Search events...',
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        onChanged: (value) {
+                          searchString = value;
+                        },
+                        onSubmitted: (value) {
+                          search(searchString);
+                        },
+                      ),
                     ),
                   ),
-                ),
-                IconButton(
-                    icon: Icon(
-                      CupertinoIcons.search,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      search(searchString);
-                    }),
-                IconButton(
-                    icon: Icon(
-                      CupertinoIcons.xmark_circle,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isSearching = false;
-                      });
-                    }),
-              ],
+                  IconButton(
+                      icon: Icon(
+                        CupertinoIcons.search,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        search(searchString);
+                      }),
+                  IconButton(
+                      icon: Icon(
+                        CupertinoIcons.xmark_circle,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isSearching = false;
+                        });
+                      }),
+                ],
+              ),
             ),
           ),
           backgroundColor: Constants.blueThemeColor,
@@ -377,27 +495,13 @@ class EventsStream extends StatelessWidget {
   final bool isPastEvents;
   final bool isMyEvents;
   final bool isSearching;
-  final List<BigInt> searchHash;
+  final List<int> searchHash;
 
   EventsStream(
       {@required this.isPastEvents,
       @required this.isMyEvents,
       @required this.isSearching,
       @required this.searchHash});
-  castListToBigInt(
-    List<dynamic> list,
-  ) {
-    try {
-      List<BigInt> newList = [];
-      for (var x in list) {
-        newList.add(BigInt.from(x));
-      }
-
-      return newList;
-    } catch (e) {
-      print(e);
-    }
-  }
 
   EventItem getItem(Map<String, dynamic> data, String id) {
     return new EventItem(
@@ -415,10 +519,10 @@ class EventsStream extends StatelessWidget {
       registeredUsers: data['registered_users'],
       endTime: data['end_time'],
       startTime: data['start_time'],
-      tier1hashes: castListToBigInt(data['tier_1_hashes']),
-      tier2hashes: castListToBigInt(data['tier_2_hashes']),
-      tier3hashes: castListToBigInt(data['tier_3_hashes']),
-      tier4hashes: castListToBigInt(data['tier_4_hashes']),
+      tier1hashes: data['tier_1_hashes'],
+      tier2hashes: data['tier_2_hashes'],
+      tier3hashes: data['tier_3_hashes'],
+      tier4hashes: data['tier_4_hashes'],
       speakers: data['speakers'],
     );
   }
