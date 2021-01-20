@@ -246,41 +246,47 @@ class _EventsScreenState extends State<EventsScreen> {
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
           flexibleSpace: SafeArea(
-            child: Row(
-              children: [
-                Expanded(
-                  child: RoundedTextField(
-                    textValue: searchString,
-                    onChanged: (value) {
-                      searchString = value;
-                    },
-                    onSubmitted: (value) {
-                      search(searchString);
-                    },
-                    textStyle: TextStyle(
-                      fontSize: 10,
+            child: Center(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CupertinoTextField(
+                        placeholder: 'Search events...',
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        onChanged: (value) {
+                          searchString = value;
+                        },
+                        onSubmitted: (value) {
+                          search(searchString);
+                        },
+                      ),
                     ),
                   ),
-                ),
-                IconButton(
-                    icon: Icon(
-                      CupertinoIcons.search,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      search(searchString);
-                    }),
-                IconButton(
-                    icon: Icon(
-                      CupertinoIcons.xmark_circle,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isSearching = false;
-                      });
-                    }),
-              ],
+                  IconButton(
+                      icon: Icon(
+                        CupertinoIcons.search,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        search(searchString);
+                      }),
+                  IconButton(
+                      icon: Icon(
+                        CupertinoIcons.xmark_circle,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isSearching = false;
+                        });
+                      }),
+                ],
+              ),
             ),
           ),
           backgroundColor: Constants.blueThemeColor,
