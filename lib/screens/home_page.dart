@@ -34,11 +34,14 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(
+                      height: 200,
+                    ),
                     Hero(tag: 'logo', child: AmchamLogo()),
                   ],
                 ),
                 SizedBox(
-                  height: SizeConfig().getBlockSizeVertical() * 5,
+                  height: SizeConfig().getBlockSizeVertical() * 4,
                 ),
                 RoundedButton(
                   onPressed: () {

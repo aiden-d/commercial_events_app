@@ -13,7 +13,7 @@ class Constants {
   static const logoTitleStyleRed = TextStyle(
     fontSize: 30,
     fontWeight: FontWeight.bold,
-    color: Color(0xffbfbfbf),
+    color: Color(0xD10F41),
     shadows: <Shadow>[
       Shadow(
         offset: Offset(5.0, 5.0),
@@ -22,7 +22,7 @@ class Constants {
       ),
     ],
   );
-  static const blueThemeColor = Color.fromARGB(1000, 26, 66, 117);
+  static const blueThemeColor = Color.fromARGB(1000, 0, 45, 98);
   static const darkBlueThemeColor = Color.fromARGB(1000, 13, 38, 67);
   static const blueText =
       TextStyle(fontSize: 25, color: Constants.blueThemeColor);
