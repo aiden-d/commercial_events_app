@@ -1,5 +1,7 @@
 import 'package:amcham_app_v2/constants.dart';
+import 'package:amcham_app_v2/screens/feedback_screen.dart';
 import 'package:amcham_app_v2/screens/landing_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:amcham_app_v2/components/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -104,156 +106,174 @@ class _ProfileScreenState extends State<ProfileScreen> {
       bottomNavigationBar: BottomBar(),
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Container(
-              child: ListView(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 100,
-                      ),
-                      Center(
-                        child: Text(
-                          'YOUR INFO',
-                          style: TextStyle(
-                              fontSize: 50, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              MemberChecker.isMember == true
-                                  ? 'AMCHAM member'
-                                  : 'Not an AMCHAM member',
-                              style: Constants.blueText,
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Email: ',
-                              style: Constants.regularHeading,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Container(
+                child: ListView(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: IconButton(
+                              icon: Icon(
+                                CupertinoIcons.ant_circle,
+                                size: 50,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            FeedbackScreen()));
+                              },
                             ),
-                            Text(
-                              '   $email',
-                              style: Constants.regularHeading,
-                            )
-                          ],
+                          ),
+                          alignment: Alignment.topRight,
                         ),
-                      ),
-                      dataInput(
-                        title: 'First Name',
-                        data: firstName,
-                        onChanged: (value) {
-                          firstName = value;
-                        },
-                      ),
-                      dataInput(
-                        title: 'Last Name',
-                        data: lastName,
-                        onChanged: (value) {
-                          lastName = value;
-                        },
-                      ),
-                      dataInput(
-                        title: 'Company',
-                        data: company,
-                        onChanged: (value) {
-                          company = value;
-                        },
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Center(
-                        child: RoundedButton(
-                          boxDecoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.circular(30)),
-                          width: 350,
-                          height: 60,
-                          title: "Apply Info",
-                          textStyle:
-                              TextStyle(color: Colors.black, fontSize: 25),
-                          colour: Colors.white,
-                          onPressed: () async {
-                            setState(() {
-                              isInfoLoading = true;
-                            });
-                            await updateUserInfo();
-                            setState(() {
-                              isInfoLoading = false;
-                            });
-                          },
-                          isLoading: isInfoLoading,
+                        Center(
+                          child: Text(
+                            'YOUR INFO',
+                            style: TextStyle(
+                                fontSize: 50, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      Center(
-                        child: RoundedButton(
-                          boxDecoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.circular(30)),
-                          width: 350,
-                          height: 60,
-                          title: "Reset Password",
-                          textStyle:
-                              TextStyle(color: Colors.black, fontSize: 25),
-                          colour: Colors.white,
-                          onPressed: () async {
-                            setState(() {
-                              isPasswordLoading = true;
-                            });
-                            await _firebaseAuth.sendPasswordResetEmail(
-                                email: email);
-                            setState(() {
-                              isPasswordLoading = false;
-                            });
-                            return _alertDialogBuilder('Sent',
-                                'Check your email to reset your password');
-                          },
-                          isLoading: isPasswordLoading,
+                        SizedBox(
+                          height: 50,
                         ),
-                      ),
-                      Center(
-                        child: RoundedButton(
-                          width: 350,
-                          height: 60,
-                          title: "Log Out",
-                          textStyle:
-                              TextStyle(color: Colors.white, fontSize: 25),
-                          colour: Constants.blueThemeColor,
-                          onPressed: () {
-                            FirebaseAuth.instance.signOut();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LandingPage()));
+                        Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                MemberChecker.isMember == true
+                                    ? 'AMCHAM member'
+                                    : 'Not an AMCHAM member',
+                                style: Constants.blueText,
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Email: ',
+                                style: Constants.regularHeading,
+                              ),
+                              Text(
+                                '   $email',
+                                style: Constants.regularHeading,
+                              )
+                            ],
+                          ),
+                        ),
+                        dataInput(
+                          title: 'First Name',
+                          data: firstName,
+                          onChanged: (value) {
+                            firstName = value;
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        dataInput(
+                          title: 'Last Name',
+                          data: lastName,
+                          onChanged: (value) {
+                            lastName = value;
+                          },
+                        ),
+                        dataInput(
+                          title: 'Company',
+                          data: company,
+                          onChanged: (value) {
+                            company = value;
+                          },
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Center(
+                          child: RoundedButton(
+                            boxDecoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                borderRadius: BorderRadius.circular(30)),
+                            width: 350,
+                            height: 60,
+                            title: "Apply Info",
+                            textStyle:
+                                TextStyle(color: Colors.black, fontSize: 25),
+                            colour: Colors.white,
+                            onPressed: () async {
+                              setState(() {
+                                isInfoLoading = true;
+                              });
+                              await updateUserInfo();
+                              setState(() {
+                                isInfoLoading = false;
+                              });
+                            },
+                            isLoading: isInfoLoading,
+                          ),
+                        ),
+                        Center(
+                          child: RoundedButton(
+                            boxDecoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                borderRadius: BorderRadius.circular(30)),
+                            width: 350,
+                            height: 60,
+                            title: "Reset Password",
+                            textStyle:
+                                TextStyle(color: Colors.black, fontSize: 25),
+                            colour: Colors.white,
+                            onPressed: () async {
+                              setState(() {
+                                isPasswordLoading = true;
+                              });
+                              await _firebaseAuth.sendPasswordResetEmail(
+                                  email: email);
+                              setState(() {
+                                isPasswordLoading = false;
+                              });
+                              return _alertDialogBuilder('Sent',
+                                  'Check your email to reset your password');
+                            },
+                            isLoading: isPasswordLoading,
+                          ),
+                        ),
+                        Center(
+                          child: RoundedButton(
+                            width: 350,
+                            height: 60,
+                            title: "Log Out",
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 25),
+                            colour: Constants.blueThemeColor,
+                            onPressed: () {
+                              FirebaseAuth.instance.signOut();
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LandingPage()));
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -11,6 +11,7 @@ import 'package:mailer/smtp_server.dart';
 import 'package:amcham_app_v2/size_config.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
 import 'events_screen.dart';
+import 'package:http/http.dart' as http;
 
 class EventRegisterScreen extends StatefulWidget {
   final EventItem eventItem;
@@ -125,30 +126,38 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   Future<void> sendEmail() async {
-    String username = 'amchamsa.events@gmail.com';
-    String password = '31Bextonlane#';
-
-    final smtpServer = gmail(username, password);
-    // Creating the Gmail server
-
-    // Create our email message.
-    final message = Message()
-      ..from = Address(username, 'Amcham Events')
-      ..recipients.add(userEmail) //recipent email
-      ..subject =
-          'Thank you for signing up for ${eventItem.title}' //subject of the email
-      ..text =
-          'Thank you for signing up for ${eventItem.title}\nPlease acess the event at the date..... with the link: ${eventItem.link}'; //body of the email
-
-    try {
-      final sendReport = await send(message, smtpServer);
-      print('Message sent: ' +
-          sendReport.toString()); //print if the email is sent
-    } on MailerException catch (e) {
-      print('Message not sent. \n' +
-          e.toString()); //print if the email is not sent
-      // e.toString() will show why the email is not sending
-    }
+    int dateInt = eventItem.date;
+    int timeInt = eventItem.startTime;
+    String date = eventItem.DateToString(dateInt) +
+        ' at ' +
+        eventItem.TimeToString(timeInt);
+    var res = await http.get(
+        'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=$userEmail&subject=Thank you for signing up for ${eventItem.title}&message=Thank you for signing up for <b> ${eventItem.title} </b> <br>Please access the event on the date: <b> $date </b> <br> <b> With the link: ${eventItem.link}</b>');
+    print(res.body);
+    // String username = 'amchamsa.events@gmail.com';
+    // String password = '31Bextonlane#';
+    //
+    // final smtpServer = gmail(username, password);
+    // // Creating the Gmail server
+    //
+    // // Create our email message.
+    // final message = Message()
+    //   ..from = Address(username, 'Amcham Events')
+    //   ..recipients.add(userEmail) //recipent email
+    //   ..subject =
+    //       'Thank you for signing up for ${eventItem.title}' //subject of the email
+    //   ..text =
+    //       'Thank you for signing up for ${eventItem.title}\nPlease acess the event at the date..... with the link: ${eventItem.link}'; //body of the email
+    //
+    // try {
+    //   final sendReport = await send(message, smtpServer);
+    //   print('Message sent: ' +
+    //       sendReport.toString()); //print if the email is sent
+    // } on MailerException catch (e) {
+    //   print('Message not sent. \n' +
+    //       e.toString()); //print if the email is not sent
+    //   // e.toString() will show why the email is not sending
+    // }
   }
 
   void addToCalendar() {
