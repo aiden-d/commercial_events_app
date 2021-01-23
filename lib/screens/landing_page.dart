@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'events_screen.dart';
 import 'package:amcham_app_v2/size_config.dart';
 import 'verify_screen.dart';
+import 'package:amcham_app_v2/push_nofitications.dart';
 
 class LandingPage extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
@@ -31,6 +32,7 @@ class LandingPage extends StatelessWidget {
                     User _user = snapshot.data;
                     SizeConfig().init(context);
                     if (_user == null) {
+                      PushNotificationsManager().init();
                       print('need to log in');
                       //user is not logged in
                       return HomePage();
@@ -38,8 +40,10 @@ class LandingPage extends StatelessWidget {
                       print('logged in');
                       if (FirebaseAuth.instance.currentUser.emailVerified ==
                           false) {
+                        PushNotificationsManager().init();
                         return VerifyScreen();
                       } else {
+                        PushNotificationsManager().init();
                         return EventsScreen();
                       }
                       //user is logged in
