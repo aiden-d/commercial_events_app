@@ -2,7 +2,8 @@
     package="com.aidendawes.amcham_app_v2">
    <application
         android:label="AMCHAM ZA"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:name=".Application">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -35,6 +36,7 @@
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
 
         </activity>
 

@@ -122,22 +122,29 @@ class _LoginScreenState extends State<LoginScreen> {
               width: double.infinity,
               child: Column(
                 children: [
-                  Stack(
+                  Column(
                     children: [
-                      IconButton(
-                        padding: EdgeInsets.all(5),
-                        iconSize: 50,
-                        alignment: Alignment.topLeft,
-                        onPressed: () {
-                          print("pressed");
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          CupertinoIcons.arrow_left,
-                          color: Colors.white,
+                      Align(
+                        child: IconButton(
+                          padding: EdgeInsets.all(5),
+                          iconSize: 40,
+                          alignment: Alignment.topLeft,
+                          onPressed: () {
+                            print("pressed");
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            CupertinoIcons.arrow_left,
+                            color: Colors.white,
+                          ),
                         ),
+                        alignment: Alignment.topLeft,
                       ),
-                      Center(child: Hero(tag: 'logo', child: AmchamLogo())),
+                      Align(
+                        child: Center(
+                            child: Hero(tag: 'logo', child: AmchamLogo())),
+                        alignment: Alignment.bottomCenter,
+                      ),
                       SizedBox(
                         width: 10,
                       ),

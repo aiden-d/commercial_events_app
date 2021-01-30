@@ -15,6 +15,41 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   bool isBug = false;
   String message = '';
   bool isLoading = false;
+
+  dynamic submit() async {
+    setState(() {
+      isLoading = true;
+    });
+    if (message != null && message != '') {
+      var v = await http.get(
+          'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=aidendawes@gmail.com&subject=New ${isBug == true ? 'Bug' : 'Feedback'} reported&message=$message');
+      print(v.body);
+      return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Sent"),
+              content: Container(
+                child: Text("Thanks for the feedback!"),
+              ),
+              actions: [
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: Text("Close")),
+              ],
+            );
+          });
+    }
+    setState(() {
+      isLoading = false;
+    });
+
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -101,8 +136,12 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     width: double.infinity,
                     child: Align(
                       child: CupertinoTextField(
+                        textInputAction: TextInputAction.done,
                         onChanged: (value) {
                           message = value;
+                        },
+                        onSubmitted: (value) async {
+                          await submit();
                         },
                         placeholder: 'Enter feedback...',
                         keyboardType: TextInputType.multiline,
@@ -116,37 +155,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     isLoading: isLoading,
                     title: 'Submit',
                     onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      if (message != null && message != '') {
-                        var v = await http.get(
-                            'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=aidendawes@gmail.com&subject=New ${isBug == true ? 'Bug' : 'Feedback'} reported&message=$message');
-                        print(v.body);
-                        return showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text("Sent"),
-                                content: Container(
-                                  child: Text("Thanks for the feedback!"),
-                                ),
-                                actions: [
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("Close")),
-                                ],
-                              );
-                            });
-                      }
-                      setState(() {
-                        isLoading = false;
-                      });
-
-                      Navigator.pop(context);
+                      await submit();
                     }),
               ],
             ),

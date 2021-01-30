@@ -234,7 +234,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                     height: SizeConfig.blockSizeVertical * 8,
                   ),
                   Text(
-                    'How would you like to recieve the link?',
+                    'How would you like to receive the link?',
                     style: TextStyle(color: Colors.white, fontSize: 22),
                     textAlign: TextAlign.center,
                   ),
