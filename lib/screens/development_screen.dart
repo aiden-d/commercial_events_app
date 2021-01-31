@@ -47,6 +47,10 @@ class DevelopmentScreen extends StatelessWidget {
 //   ),
 // );
 
+// String messageTitle = "Empty";
+// String notificationAlert = "alert";
+//
+// FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 // _firebaseMessaging.configure(
 // onMessage: (message) async {
 // setState(() {

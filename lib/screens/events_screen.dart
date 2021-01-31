@@ -1,4 +1,5 @@
 import 'package:amcham_app_v2/components/rounded_text_field.dart';
+import 'package:amcham_app_v2/components/search_app_bar.dart';
 import 'package:amcham_app_v2/constants.dart';
 import 'package:amcham_app_v2/hash_table.dart';
 import 'package:amcham_app_v2/size_config.dart';
@@ -14,6 +15,7 @@ import 'package:amcham_app_v2/components/get_firebase_image.dart';
 import 'package:amcham_app_v2/components/event_item.dart';
 import 'package:amcham_app_v2/scripts/member_checker.dart';
 import 'dart:convert';
+import 'package:amcham_app_v2/components/hashing.dart';
 
 final _firestore = Firestore.instance;
 firebase_storage.FirebaseStorage storage =
@@ -31,7 +33,7 @@ class _EventsScreenState extends State<EventsScreen> {
   bool isMyEvents = false;
   bool isSearching = false;
   List<int> searchHash = [];
-  String searchString = '';
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -112,185 +114,16 @@ class _EventsScreenState extends State<EventsScreen> {
     });
   }
 
-  int generateSimpleHash(String str) {
-    int length = str.length;
-    int i = 0;
-    String s = '';
-    while (i < length) {
-      s = s + getPlaceInAlphabet(str[i]).toString() + '0';
-      i++;
-    }
-    if (s.length < 18) {
-      s = s.substring(0, s.length);
-    } else {
-      s = s.substring(0, 18);
-    }
-
-    return int.parse(s);
-  }
-
-  int getPlaceInAlphabet(String str) {
-    if (str == 'a') {
-      return 1;
-    }
-    if (str == 'b') {
-      return 2;
-    }
-    if (str == 'c') {
-      return 3;
-    }
-    if (str == 'd') {
-      return 4;
-    }
-    if (str == 'e') {
-      return 5;
-    }
-    if (str == 'f') {
-      return 6;
-    }
-    if (str == 'g') {
-      return 7;
-    }
-    if (str == 'h') {
-      return 8;
-    }
-    if (str == 'i') {
-      return 9;
-    }
-    if (str == 'j') {
-      return 10;
-    }
-    if (str == 'k') {
-      return 11;
-    }
-    if (str == 'l') {
-      return 12;
-    }
-    if (str == 'm') {
-      return 13;
-    }
-    if (str == 'n') {
-      return 14;
-    }
-    if (str == 'o') {
-      return 15;
-    }
-    if (str == 'p') {
-      return 16;
-    }
-    if (str == 'q') {
-      return 17;
-    }
-    if (str == 'r') {
-      return 18;
-    }
-    if (str == 's') {
-      return 19;
-    }
-    if (str == 't') {
-      return 20;
-    }
-    if (str == 'u') {
-      return 21;
-    }
-    if (str == 'v') {
-      return 22;
-    }
-    if (str == 'w') {
-      return 23;
-    }
-    if (str == 'x') {
-      return 24;
-    }
-    if (str == 'y') {
-      return 25;
-    }
-    if (str == 'z') {
-      return 26;
-    }
-    if (str == '1') {
-      return 27;
-    }
-    if (str == '2') {
-      return 28;
-    }
-    if (str == '3') {
-      return 29;
-    }
-    if (str == '4') {
-      return 30;
-    }
-    if (str == '5') {
-      return 31;
-    }
-    if (str == '6') {
-      return 32;
-    }
-    if (str == '7') {
-      return 33;
-    }
-    if (str == '8') {
-      return 34;
-    }
-    if (str == '9') {
-      return 35;
-    }
-    return 36;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomBar(),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
-        child: AppBar(
-          flexibleSpace: SafeArea(
-            child: Center(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CupertinoTextField(
-                        placeholder: 'Search events...',
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        onChanged: (value) {
-                          searchString = value;
-                        },
-                        onSubmitted: (value) {
-                          search(searchString);
-                        },
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                      icon: Icon(
-                        CupertinoIcons.search,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        search(searchString);
-                      }),
-                  IconButton(
-                      icon: Icon(
-                        CupertinoIcons.xmark_circle,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isSearching = false;
-                        });
-                      }),
-                ],
-              ),
-            ),
-          ),
-          backgroundColor: Constants.blueThemeColor,
-          actions: [],
+        preferredSize: Size.fromHeight(70),
+        child: SearchAppbar(
+          searchFunction: (value) {
+            search(value);
+          },
         ),
       ),
       backgroundColor: Colors.grey[100],

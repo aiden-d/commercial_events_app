@@ -1,7 +1,7 @@
 import 'package:amcham_app_v2/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:amcham_app_v2/screens/updates_screen.dart';
+import 'package:amcham_app_v2/screens/news_screen.dart';
 import 'package:amcham_app_v2/screens/events_screen.dart';
 import 'package:amcham_app_v2/screens/profile_screen.dart';
 
