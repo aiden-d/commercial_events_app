@@ -152,7 +152,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                MemberChecker.isMember == true
+                                MemberChecker().checkIfMember(FirebaseAuth
+                                            .instance.currentUser.email) ==
+                                        true
                                     ? 'AMCHAM member'
                                     : 'Not an AMCHAM member',
                                 style: Constants.blueText,

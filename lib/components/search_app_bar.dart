@@ -4,7 +4,8 @@ import 'package:amcham_app_v2/constants.dart';
 
 class SearchAppbar extends PreferredSize {
   final Function(String string) searchFunction;
-  SearchAppbar({@required this.searchFunction});
+  final Function clearFunction;
+  SearchAppbar({@required this.searchFunction, @required this.clearFunction});
   String searchString = '';
   bool isSearching = false;
   String getSearchString() {
@@ -57,6 +58,7 @@ class SearchAppbar extends PreferredSize {
                       color: Colors.white,
                     ),
                     onPressed: () {
+                      clearFunction();
                       isSearching = false;
                       searchString = '';
                       (context as Element).markNeedsBuild();

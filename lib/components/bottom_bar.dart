@@ -52,7 +52,7 @@ class _BottomBarState extends State<BottomBar> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                icon: Icon(CupertinoIcons.bell),
+                icon: Icon(CupertinoIcons.news_solid),
                 color: isButton1Active == true
                     ? Constants.blueThemeColor
                     : Colors.black,

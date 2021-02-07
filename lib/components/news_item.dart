@@ -140,26 +140,44 @@ class NewsItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(CupertinoIcons.calendar),
+                    Icon(CupertinoIcons.calendar, color: Colors.black45),
                     SizedBox(
                       width: 10,
                     ),
                     Text(
                       '${DateToString(this.dateTime)}',
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16, color: Colors.black45),
                     )
                   ],
                 ),
               ],
+            ),
+            SizedBox(
+              height: 20,
             ),
 
             //TODO put container here
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: LoadFirebaseStorageImage(imageRef: imageRef)),
-            hideSummary == true ? SizedBox() : Text(summaryText),
+            hideSummary == true
+                ? SizedBox()
+                : Align(
+                    child: Text(
+                      summaryText,
+                      style: Constants.regularHeading
+                          .copyWith(fontSize: 16, fontStyle: FontStyle.normal),
+                    ),
+                    alignment: Alignment.topLeft,
+                  ),
 
-            //showInfo == true ? Text(info) : SizedBox(),
+            showInfo == true
+                ? Text(
+                    info,
+                    style: Constants.regularHeading
+                        .copyWith(fontSize: 16, fontStyle: FontStyle.normal),
+                  )
+                : SizedBox(),
           ],
         ),
       ),

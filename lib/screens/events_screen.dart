@@ -114,6 +114,12 @@ class _EventsScreenState extends State<EventsScreen> {
     });
   }
 
+  void clearSearch() {
+    setState(() {
+      isSearching = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +129,9 @@ class _EventsScreenState extends State<EventsScreen> {
         child: SearchAppbar(
           searchFunction: (value) {
             search(value);
+          },
+          clearFunction: () {
+            clearSearch();
           },
         ),
       ),

@@ -63,6 +63,7 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
     BoxDecoration inActiveDecoration = BoxDecoration();
     item.isButton = false;
     item.showInfo = true;
+    item.isInfoSelected = true;
     item.hideSummary = true;
     item.infoButtonFunction = () {
       setState(() {
@@ -97,83 +98,10 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
             child: ListView(
               children: [
                 item,
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isInfoActive = true;
-                          });
-                        },
-                        child: Container(
-                          child: Text('Info'),
-                          decoration: isInfoActive
-                              ? activeDecoration
-                              : inActiveDecoration,
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isInfoActive = false;
-                          });
-                        },
-                        child: Container(
-                          child: Text('Speakers'),
-                          decoration: isInfoActive
-                              ? inActiveDecoration
-                              : activeDecoration,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class SpeakersList extends StatelessWidget {
-  final List speakers;
-  SpeakersList({this.speakers});
-  List<SpeakerItem> speakerItemList = [];
-  void generateSpeakers() {
-    print('speaekrs 2 = $speakers');
-    for (String s in speakers) {
-      speakerItemList.add(SpeakerItem(
-        title: s,
-      ));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: speakerItemList,
-      ),
-    );
-  }
-}
-
-class SpeakerItem extends StatelessWidget {
-  final String title;
-  SpeakerItem({this.title});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Text(
-        '- $title',
-        style: TextStyle(color: Constants.darkBlueThemeColor, fontSize: 20),
       ),
     );
   }

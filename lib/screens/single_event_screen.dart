@@ -1,6 +1,7 @@
 import 'package:amcham_app_v2/components/event_item.dart';
 import 'package:amcham_app_v2/components/rounded_button.dart';
 import 'package:amcham_app_v2/constants.dart';
+import 'package:amcham_app_v2/scripts/member_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:amcham_app_v2/components/get_firebase_image.dart';
@@ -162,12 +163,19 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
             //TODO validate whether user has pruchased this item and then write 'owned'
             alignment: Alignment.bottomCenter,
             child: RoundedButton(
-              title: checkOwnedEvent() == true
-                  ? 'Registered'
-                  : item.price == 0
-                      ? 'Register: FREE'
-                      : 'Register: R${item.price}',
+              title: (item.isMembersOnly == true &&
+                      MemberChecker().checkIfMember(userEmail) == false)
+                  ? 'Members Only '
+                  : checkOwnedEvent() == true
+                      ? 'Registered'
+                      : item.price == 0
+                          ? 'Register: FREE'
+                          : 'Register: R${item.price}',
               onPressed: () {
+                if (item.isMembersOnly == true &&
+                    MemberChecker().checkIfMember(userEmail) == false) {
+                  return;
+                }
                 Navigator.push(
                   //push with price and event ID
                   context,

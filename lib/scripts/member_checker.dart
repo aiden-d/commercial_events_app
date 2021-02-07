@@ -24,6 +24,7 @@ class MemberChecker {
       String newEnding = email.substring(start, end);
       print(newEnding);
       if (newEnding == e) {
+        print('is member');
         isMember = true;
         return true;
       }

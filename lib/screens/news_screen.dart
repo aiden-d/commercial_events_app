@@ -47,6 +47,12 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
     });
   }
 
+  void clearSearch() {
+    setState(() {
+      isSearching = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,12 +62,17 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
           searchFunction: (value) {
             search(value);
           },
+          clearFunction: () {
+            clearSearch();
+          },
         ),
       ),
       body: Container(
           child: SingleChildScrollView(
         child: Column(
-          children: [NewsStream(isSearching: false, searchHash: null)],
+          children: [
+            NewsStream(isSearching: isSearching, searchHash: searchHash)
+          ],
         ),
       )),
       bottomNavigationBar: BottomBar(),
