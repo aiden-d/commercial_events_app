@@ -68,6 +68,7 @@ class NewsItem extends StatelessWidget {
     return points;
   }
 
+  //test
   //date must be formated as year/month/day
   String DateToString(int numberDate) {
     String strNumberDate = numberDate.toString();
