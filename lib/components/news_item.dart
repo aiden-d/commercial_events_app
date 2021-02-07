@@ -24,6 +24,7 @@ class NewsItem extends StatelessWidget {
   bool isInfoSelected = true;
   Function infoButtonFunction;
   Function speakersButtonFunction;
+  bool enableImage = false;
 
   NewsItem({
     @required this.dateTime,
@@ -157,19 +158,12 @@ class NewsItem extends StatelessWidget {
             ),
 
             //TODO put container here
-            Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: LoadFirebaseStorageImage(imageRef: imageRef)),
-            hideSummary == true
-                ? SizedBox()
-                : Align(
-                    child: Text(
-                      summaryText,
-                      style: Constants.regularHeading
-                          .copyWith(fontSize: 16, fontStyle: FontStyle.normal),
-                    ),
-                    alignment: Alignment.topLeft,
-                  ),
+            enableImage == true
+                ? Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: LoadFirebaseStorageImage(imageRef: imageRef))
+                : SizedBox(),
+            hideSummary == true ? SizedBox() : Text(summaryText),
 
             showInfo == true
                 ? Text(

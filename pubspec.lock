@@ -352,7 +352,7 @@ packages:
       name: mailer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.1"
+    version: "3.3.0"
   matcher:
     dependency: transitive
     description:
