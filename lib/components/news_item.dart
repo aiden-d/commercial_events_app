@@ -24,6 +24,7 @@ class NewsItem extends StatelessWidget {
   bool isInfoSelected = true;
   Function infoButtonFunction;
   Function speakersButtonFunction;
+  bool enableImage = false;
 
   NewsItem({
     @required this.dateTime,
@@ -68,7 +69,6 @@ class NewsItem extends StatelessWidget {
     return points;
   }
 
-  //test
   //date must be formated as year/month/day
   String DateToString(int numberDate) {
     String strNumberDate = numberDate.toString();
@@ -155,9 +155,11 @@ class NewsItem extends StatelessWidget {
             ),
 
             //TODO put container here
-            Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: LoadFirebaseStorageImage(imageRef: imageRef)),
+            enableImage == true
+                ? Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: LoadFirebaseStorageImage(imageRef: imageRef))
+                : SizedBox(),
             hideSummary == true ? SizedBox() : Text(summaryText),
 
             //showInfo == true ? Text(info) : SizedBox(),
