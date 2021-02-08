@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 int generateSimpleHash(String str) {
   int length = str.length;
   int i = 0;
@@ -12,6 +14,7 @@ int generateSimpleHash(String str) {
     s = s.substring(0, 18);
   }
 
+  print('hash =' + int.parse(s).toString());
   return int.parse(s);
 }
 
