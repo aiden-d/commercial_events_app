@@ -18,7 +18,9 @@ class NewsItem extends StatelessWidget {
   final List tier2hashes;
   final List tier3hashes;
   final String title;
+  final String link;
   bool isButton;
+
   bool showInfo;
   bool hideSummary;
   bool isInfoSelected = true;
@@ -27,6 +29,7 @@ class NewsItem extends StatelessWidget {
   bool enableImage = false;
 
   NewsItem({
+    @required this.link,
     @required this.dateTime,
     @required this.summaryText,
     @required this.imageRef,
@@ -38,6 +41,7 @@ class NewsItem extends StatelessWidget {
     @required this.title,
   });
   int rankedPoints;
+
   int getPointsFromHashes(List<int> searchHashes) {
     int points = 0;
     for (int searchHash in searchHashes) {

@@ -8,6 +8,7 @@ import 'package:amcham_app_v2/components/get_firebase_image.dart';
 import 'events_screen.dart';
 import 'event_register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SingleNewsScreen extends StatefulWidget {
   String testStr = '';
@@ -51,10 +52,20 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
   BoxDecoration inActiveDecoration = BoxDecoration();
 
   bool isInfoActive = true;
-
+  bool isLinkActive = false;
   final NewsItem item;
+  String url;
   @override
   void initState() {
+    if (item.link != null && item.link != '' && item.link != ' ') {
+      isLinkActive = true;
+      url = item.link;
+      if (url.substring(0, 8) != 'https://' &&
+          url.substring(0, 7) != 'http://') {
+        url = 'https://' + url;
+      } else {}
+      print('ss = ' + url);
+    }
     BoxDecoration activeDecoration = BoxDecoration(
       border: Border(
         bottom: BorderSide(width: 2, color: Colors.lightBlue.shade900),
@@ -62,6 +73,7 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
     );
     BoxDecoration inActiveDecoration = BoxDecoration();
     item.isButton = false;
+    item.enableImage = true;
     item.showInfo = true;
     item.isInfoSelected = true;
     item.hideSummary = true;
@@ -81,6 +93,14 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
     super.initState();
   }
 
+  _launchURL() async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch ${url}';
+    }
+  }
+
   String userEmail = FirebaseAuth.instance.currentUser.email;
 
   _SingleNewsScreenState({@required this.item});
@@ -95,12 +115,23 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
       body: Stack(
         children: [
           Container(
-            child: ListView(
-              children: [
-                item,
-              ],
+            child: SingleChildScrollView(
+              child: item,
             ),
           ),
+          isLinkActive == true
+              ? Align(
+                  child: RoundedButton(
+                    title: 'Open Link',
+                    onPressed: _launchURL,
+                    radius: 10,
+                    width: 350,
+                    colour: Constants.blueThemeColor,
+                    textStyle: TextStyle(color: Colors.white),
+                  ),
+                  alignment: Alignment.bottomCenter,
+                )
+              : SizedBox(),
         ],
       ),
     );

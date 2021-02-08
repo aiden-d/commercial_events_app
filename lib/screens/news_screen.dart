@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:amcham_app_v2/components/news_item.dart';
 import 'package:amcham_app_v2/constants.dart';
 import 'package:amcham_app_v2/screens/single_event_screen.dart';
@@ -119,6 +121,7 @@ class NewsStream extends StatelessWidget {
     print('id = $id');
     print(data);
     return new NewsItem(
+      link: data['link'],
       title: data['title'],
       dateTime: data['date_time'],
       summaryText: data['summary_text'],
