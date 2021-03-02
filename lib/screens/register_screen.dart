@@ -44,8 +44,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return users
         .doc(_email)
         .set({
-          'first_name': _firstName, // John Doe
-          'company': _company, // Stokes and Sons
+          'first_name': _firstName,
+          'company': _company,
           'last_name': _lastName,
           'email': _email,
 

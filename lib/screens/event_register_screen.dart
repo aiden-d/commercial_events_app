@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:amcham_app_v2/components/event_item.dart';
 import 'package:amcham_app_v2/constants.dart';
 import 'package:flutter/material.dart';
@@ -158,6 +158,16 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     //       e.toString()); //print if the email is not sent
     //   // e.toString() will show why the email is not sending
     // }
+  }
+
+  _launchURL() async {
+    String url = 'https://' + eventItem.link;
+    print('url = $url');
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void addToCalendar() {
@@ -338,6 +348,11 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                         isTopLoading = false;
                       });
                     },
+                  ),
+                  RoundedButton(
+                    title: 'Open Link',
+                    isLoading: isTopLoading,
+                    onPressed: _launchURL,
                   ),
                   RoundedButton(
                     title: 'Add to calendar',
