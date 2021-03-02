@@ -26,4 +26,7 @@ class Constants {
   static const darkBlueThemeColor = Color.fromARGB(1000, 13, 38, 67);
   static const blueText =
       TextStyle(fontSize: 25, color: Constants.blueThemeColor);
+  static const testText = Text(
+    'test',
+  );
 }
