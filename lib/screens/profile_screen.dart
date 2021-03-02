@@ -104,6 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomBar(),
+      //resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
