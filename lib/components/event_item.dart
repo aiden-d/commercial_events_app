@@ -22,6 +22,7 @@ class EventItem extends StatelessWidget {
   final String info;
   final String id;
   final String link;
+  final String pastLink;
   final List<dynamic> registeredUsers;
   final List tier1hashes;
   final List tier2hashes;
@@ -55,6 +56,7 @@ class EventItem extends StatelessWidget {
     @required this.tier3hashes,
     @required this.tier4hashes,
     @required this.speakers,
+    @required this.pastLink,
   });
   int rankedPoints;
   int getPointsFromHashes(List<int> searchHashes) {

@@ -347,6 +347,7 @@ class EventsStream extends StatelessWidget {
 
   EventItem getItem(Map<String, dynamic> data, String id) {
     return new EventItem(
+      pastLink: data['past_link'],
       price: data['price'],
       date: data['date'],
       title: data['title'],
@@ -382,6 +383,13 @@ class EventsStream extends StatelessWidget {
     return false;
   }
 
+  int getCurrentDateInt() {
+    DateTime now = DateTime.now();
+    return int.parse(now.year.toString() +
+        (now.month > 9 ? now.month.toString() : '0' + now.month.toString()) +
+        (now.day > 9 ? now.day.toString() : '0' + now.day.toString()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
@@ -398,8 +406,7 @@ class EventsStream extends StatelessWidget {
             int eventDate = data['date'];
             DateTime now = new DateTime.now();
             DateTime date = new DateTime(now.year, now.month, now.day);
-            String dateString = '${date.year}${date.month}${date.day}';
-            int dateInt = int.parse(dateString);
+            int dateInt = getCurrentDateInt();
             if (isMyEvents) {
               if (getIfMyEvent(data) == true) {
                 if (isPastEvents == true) {

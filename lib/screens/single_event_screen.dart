@@ -101,6 +101,21 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     return false;
   }
 
+  int getDateTimeInt() {
+    int val = int.parse(item.date.toString() + item.endTime.toString());
+    print('int date time = ' + val.toString());
+    return val;
+  }
+
+  int getCurrentDateTimeInt() {
+    DateTime now = DateTime.now();
+    return int.parse(now.year.toString() +
+        (now.month > 9 ? now.month.toString() : '0' + now.month.toString()) +
+        (now.day > 9 ? now.day.toString() : '0' + now.day.toString()) +
+        (now.hour > 9 ? now.hour.toString() : '0' + now.hour.toString()) +
+        (now.minute > 9 ? now.minute.toString() : '0' + now.minute.toString()));
+  }
+
   _SingleEventScreenState({@required this.item});
   SpeakersList speakersList = new SpeakersList();
   @override
@@ -167,7 +182,10 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                       MemberChecker().checkIfMember(userEmail) == false)
                   ? 'Members Only '
                   : checkOwnedEvent() == true
-                      ? 'Registered'
+                      ? (getDateTimeInt() < getCurrentDateTimeInt() &&
+                              item.pastLink == '')
+                          ? 'Not Available Yet'
+                          : 'Registered'
                       : item.price == 0
                           ? 'Register: FREE'
                           : 'Register: R${item.price}',
