@@ -181,17 +181,21 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
               title: (item.isMembersOnly == true &&
                       MemberChecker().checkIfMember(userEmail) == false)
                   ? 'Members Only '
-                  : checkOwnedEvent() == true
-                      ? (getDateTimeInt() < getCurrentDateTimeInt() &&
-                              item.pastLink == '')
-                          ? 'Not Available Yet'
-                          : 'Registered'
-                      : item.price == 0
-                          ? 'Register: FREE'
-                          : 'Register: R${item.price}',
+                  : (getDateTimeInt() < getCurrentDateTimeInt() &&
+                          (item.pastLink == '' || item.pastLink == null))
+                      ? 'Not Available Yet'
+                      : checkOwnedEvent() == true
+                          ? 'Registered'
+                          : item.price == 0
+                              ? 'Register: FREE'
+                              : 'Register: R${item.price}',
               onPressed: () {
                 if (item.isMembersOnly == true &&
                     MemberChecker().checkIfMember(userEmail) == false) {
+                  return;
+                }
+                if (getDateTimeInt() < getCurrentDateTimeInt() &&
+                    (item.pastLink == '' || item.pastLink == null)) {
                   return;
                 }
                 Navigator.push(
