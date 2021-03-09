@@ -109,11 +109,13 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
   int getCurrentDateTimeInt() {
     DateTime now = DateTime.now();
-    return int.parse(now.year.toString() +
+    int val = int.parse(now.year.toString() +
         (now.month > 9 ? now.month.toString() : '0' + now.month.toString()) +
         (now.day > 9 ? now.day.toString() : '0' + now.day.toString()) +
         (now.hour > 9 ? now.hour.toString() : '0' + now.hour.toString()) +
         (now.minute > 9 ? now.minute.toString() : '0' + now.minute.toString()));
+    print('current int date time = $val');
+    return val;
   }
 
   _SingleEventScreenState({@required this.item});

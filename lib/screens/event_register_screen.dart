@@ -41,6 +41,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
       @required this.eventItem,
       @required this.isEventAlreadyOwned});
   bool isTopLoading = false;
+  bool isMidLoading = false;
   bool isBottomLoading = false;
   CollectionReference userInfo =
       FirebaseFirestore.instance.collection('UserInfo');
@@ -132,7 +133,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
         ' at ' +
         eventItem.TimeToString(timeInt);
     var res = await http.get(
-        'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=$userEmail&subject=Thank you for signing up for ${eventItem.title}&message=Thank you for signing up for <b> ${eventItem.title} </b> <br>Please access the event on the date: <b> $date </b> <br> <b> With the link: ${eventItem.link}</b>');
+        'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=$userEmail&subject=Thank you for signing up for ${eventItem.title}&message=Thank you for signing up for <b> ${eventItem.title}  </br> <br>Please access the event on the date: <b> $date </b> </b> <br><br> <b> With the link (if clicking on the link does not work please copy and paste it into the browser): </b> <br> <a href="${eventItem.link}">This Link</a></b><br></br>${eventItem.link}');
     print(res.body);
     // String username = 'amchamsa.events@gmail.com';
     // String password = '31Bextonlane#';
@@ -161,7 +162,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   _launchURL() async {
-    String url = 'https://' + eventItem.link;
+    String url = eventItem.link;
     print('url = $url');
     if (await canLaunch(url)) {
       await launch(url);
@@ -351,7 +352,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                   ),
                   RoundedButton(
                     title: 'Open Link',
-                    isLoading: isTopLoading,
+                    isLoading: isMidLoading,
                     onPressed: _launchURL,
                   ),
                   RoundedButton(
