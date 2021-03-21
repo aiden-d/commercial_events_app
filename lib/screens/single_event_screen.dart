@@ -102,7 +102,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   }
 
   int getDateTimeInt() {
-    int val = int.parse(item.date.toString() + item.endTime.toString());
+    int val = int.parse(item.date.toString());
     print('int date time = ' + val.toString());
     return val;
   }
@@ -184,7 +184,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                       MemberChecker().checkIfMember(userEmail) == false)
                   ? 'Members Only '
                   : (getDateTimeInt() < getCurrentDateTimeInt() &&
-                          (item.pastLink == '' || item.pastLink == null))
+                          (item.pastLink == "" || item.pastLink == null))
                       ? 'Not Available Yet'
                       : checkOwnedEvent() == true
                           ? 'Registered'
