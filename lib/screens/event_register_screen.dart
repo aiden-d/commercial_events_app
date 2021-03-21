@@ -171,20 +171,23 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     }
   }
 
-  void addToCalendar() {
+  void addToCalendar() async {
     Event event = Event(
       title: eventItem.title,
       description: '${eventItem.link}',
       startDate: getDateFromItem(eventItem.startTime),
       endDate: getDateFromItem(eventItem.endTime),
     );
-    Add2Calendar.addEvent2Cal(event);
+    print('adding to calendar');
+    await Add2Calendar.addEvent2Cal(event);
+    print('added to calendar');
     return;
   }
 
   DateTime getDateFromItem(int time) {
     String dateStr = eventItem.date.toString();
-    String timeStr = time.toString();
+    String timeStr =
+        time.toString().length >= 4 ? time.toString() : '0' + time.toString();
     int year = int.parse(dateStr.substring(0, 4));
     int month = int.parse(dateStr.substring(4, 6));
     int day = int.parse(dateStr.substring(6, 8));

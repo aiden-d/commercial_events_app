@@ -175,7 +175,8 @@ class EventItem extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Constants.regularHeading,
+                    style: Constants.regularHeading
+                        .copyWith(fontSize: title.length > 25 ? 14 : 19),
                   ),
                   Text(
                     type,
