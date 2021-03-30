@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'push_nofitications.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   PushNotificationsManager notificationsManager =
       new PushNotificationsManager();
   notificationsManager.init();

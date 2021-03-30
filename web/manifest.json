@@ -1,6 +1,6 @@
 {
-    "name": "amcham_app_v2",
-    "short_name": "amcham_app_v2",
+    "name": "amcham_app",
+    "short_name": "amcham_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
