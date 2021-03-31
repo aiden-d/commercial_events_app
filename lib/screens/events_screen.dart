@@ -383,7 +383,8 @@ class EventsStream extends StatelessWidget {
     return false;
   }
 
-   int getCurrentDateTimeInt() {
+//
+  int getCurrentDateTimeInt() {
     DateTime now = DateTime.now();
     int val = int.parse(now.year.toString() +
         (now.month > 9 ? now.month.toString() : '0' + now.month.toString()) +
