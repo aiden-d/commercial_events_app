@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amcham_app_v2/components/event_item.dart';
 import 'package:amcham_app_v2/constants.dart';
@@ -6,12 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:amcham_app_v2/components/rounded_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
+
 import 'package:amcham_app_v2/size_config.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
 import 'events_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 
 class EventRegisterScreen extends StatefulWidget {
   final EventItem eventItem;
@@ -224,6 +227,14 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
         });
   }
 
+  String getPriceString() {
+    if (eventItem.price > 0) {
+      return 'R${eventItem.price}';
+    }
+    return 'FREE';
+  }
+
+  bool addtoCalendarBool = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -240,80 +251,142 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Text(
-                    'Registration Successful!',
+                    '${eventItem.title}: ${getPriceString()}',
                     style: Constants.logoTitleStyle,
                   ),
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 8,
                   ),
                   Text(
-                    'How would you like to receive the link?',
+                    eventItem.price == 0
+                        ? ''
+                        : 'Note: You may be redirected to pay (do not leave the page after paying)',
                     style: TextStyle(color: Colors.white, fontSize: 22),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 2,
                   ),
+                  kIsWeb == true
+                      ? SizedBox()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Theme(
+                              data: Theme.of(context).copyWith(
+                                unselectedWidgetColor: Colors.white,
+                              ),
+                              child: Checkbox(
+                                value: addtoCalendarBool,
+                                onChanged: (val) {
+                                  setState(() {
+                                    addtoCalendarBool = val;
+                                  });
+                                },
+                              ),
+                            ),
+                            Text(
+                              'Add Event To Device Calendar?',
+                              style: Constants.whiteTextStyle
+                                  .copyWith(fontSize: 20),
+                            )
+                          ],
+                        ),
                   RoundedButton(
-                    title: 'Only Email',
-                    isLoading: isTopLoading,
-                    onPressed: () async {
-                      setState(() {
-                        isTopLoading = true;
-                      });
-                      //add event ID to user account storage on firebase
-                      print('attempting to update user');
-                      await updateUser();
-                      print('attempting to update event');
-                      await updateEvent();
-                      print('sending email');
-                      await sendEmail();
-                      await _alertDialogBuilder(
-                          'Sent', 'Check your email to access the event');
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EventsScreen(),
-                          ));
+                      isLoading: isBottomLoading,
+                      title: 'Complete Registration',
+                      onPressed: () async {
+                        setState(() {
+                          isBottomLoading = true;
+                        });
+                        if (eventItem.price > 0) {
+                          String userEmailString = '';
+                          for (int i = 0; i < userEmail.length; i++) {
+                            var char = userEmail[i];
+                            if (char == '@') {
+                              userEmailString += "%40";
+                            } else {
+                              userEmailString += char;
+                            }
+                          }
+                          var res = await http.get(
+                              'https://us-central1-amcham-app.cloudfunctions.net/genkey?user=$userEmailString');
+                          var userKey = res.body;
+                          print('key = $userKey');
+                          print('eventid = ${eventItem.id}');
 
-                      //send email and pop to previous screen
+                          // print("decoded email = $userEmailString");
 
-                      setState(() {
-                        isTopLoading = false;
-                      });
-                    },
-                  ),
-                  RoundedButton(
-                    title: 'Email + Calendar',
-                    isLoading: isBottomLoading,
-                    onPressed: () async {
-                      setState(() {
-                        isBottomLoading = true;
-                      });
-                      //add event ID to user account storage on firebase
-                      print('attempting to update user');
-                      await updateUser();
-                      print('attempting to update event');
-                      await updateEvent();
-                      print('sending email');
-                      await sendEmail();
-                      await addToCalendar();
-                      await _alertDialogBuilder('Sent',
-                          'Check your email or calendar to access the event');
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EventsScreen(),
-                          ));
+                          String link =
+                              "https://us-central1-amcham-app.cloudfunctions.net/registerUser?user=$userKey%26eventID=${eventItem.id}";
 
-                      //send email and pop to previous screen
+                          print(link);
+                          String fullURL =
+                              "https://sandbox.payfast.co.za/eng/process?cmd=_paynow&receiver=10022223&item_name=test+payment&amount=69.00&return_url=$link";
+                          //https://sandbox.payfast.co.za/eng/process?cmd=_paynow&receiver=10022223&item_name=test+payment&amount=69.00 }
+                          print('fullURL $fullURL');
+                          setState(() {
+                            isBottomLoading = false;
+                          });
 
-                      setState(() {
-                        isBottomLoading = false;
-                      });
-                    },
-                  ),
+                          await FlutterWebBrowser.openWebPage(
+                            url: fullURL,
+                            customTabsOptions: CustomTabsOptions(
+                              urlBarHidingEnabled: true,
+                              addDefaultShareMenuItem: false,
+                              showTitle: false,
+                            ),
+                          );
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EventsScreen()));
+
+                          return;
+                        } else {
+                          //add event ID to user account storage on firebase
+                          print('attempting to update user');
+                          await updateUser();
+                          print('attempting to update event');
+                          await updateEvent();
+                          print('sending email');
+                        }
+
+                        await sendEmail();
+                        if (addtoCalendarBool == true) {
+                          await addToCalendar();
+                        }
+                        await _alertDialogBuilder('Sent',
+                            'Check your email or calendar to access the event');
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EventsScreen(),
+                            ));
+
+                        //send email and pop to previous screen
+
+                        setState(() {
+                          isBottomLoading = false;
+                        });
+                      }),
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 20,
                   ),
@@ -323,6 +396,19 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 100,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(

@@ -1,0 +1,6 @@
+{
+    "origin": ["*"],
+    "method": ["GET", "POST"],
+    "responseHeader": ["Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers"],
+    "maxAgeSeconds": 7200
+}
