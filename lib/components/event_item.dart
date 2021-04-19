@@ -173,10 +173,12 @@ class EventItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title,
-                    style: Constants.regularHeading
-                        .copyWith(fontSize: title.length > 25 ? 14 : 19),
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: Constants.regularHeading
+                          .copyWith(fontSize: title.length > 25 ? 16 : 19),
+                    ),
                   ),
                   Text(
                     type,

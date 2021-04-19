@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:amcham_app_v2/scripts/member_checker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amcham_app_v2/components/event_item.dart';
 import 'package:amcham_app_v2/constants.dart';
@@ -142,12 +143,11 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     var res = await http.get(
         'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=$userEmail&subject=Thank you for signing up for ${eventItem.title}&message=Thank you for signing up for <b> ${eventItem.title}  </br> <br>Please access the event on the date: <b> $date </b> </b> <br><br> <b> With the link (if clicking on the link does not work please copy and paste it into the browser): </b> <br> <a href="${eventItem.link}">This Link</a></b><br></br>${eventItem.link}');
     print(res.body);
-    
   }
 
   _launchURL() async {
     String url = eventItem.link;
-    
+
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -187,7 +187,8 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     super.initState();
   }
 
-  Future<void> _alertDialogBuilder(String title, String info, Function closeFunction) async {
+  Future<void> _alertDialogBuilder(
+      String title, String info, Function closeFunction) async {
     return showDialog(
         barrierDismissible: false,
         context: context,
@@ -199,9 +200,11 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
             ),
             actions: [
               FlatButton(
-                  onPressed: closeFunction!=null ? closeFunction :  () {
-                    Navigator.pop(context);
-                  },
+                  onPressed: closeFunction != null
+                      ? closeFunction
+                      : () {
+                          Navigator.pop(context);
+                        },
                   child: Text("Close Dialog"))
             ],
           );
@@ -209,7 +212,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   String getPriceString() {
-    if (eventItem.price > 0) {
+    if (eventItem.price > 0 && !MemberChecker().checkIfMember(userEmail)) {
       return 'R${eventItem.price}';
     }
     return 'FREE';
@@ -228,38 +231,40 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     var res = await http.get(
         'https://us-central1-amcham-app.cloudfunctions.net/genkey?user=$userEmailString');
     var userKey = res.body;
-    
-
-    
 
     String link =
         "https://us-central1-amcham-app.cloudfunctions.net/registerUser?user=$userKey%26eventID=${eventItem.id}";
 
     print(link);
     fullURL =
-        "https://sandbox.payfast.co.za/eng/process?cmd=_paynow&receiver=10022223&item_name=test+payment&amount=69.00&return_url=$link";
-    
-    await userInfo.doc(userEmail).update({"successful_transaction":false,});
+        "https://sandbox.payfast.co.za/eng/process?cmd=_paynow&receiver=10022223&item_name=test+payment&amount=${eventItem.price}&return_url=$link";
+
+    await userInfo.doc(userEmail).update({
+      "successful_transaction": false,
+    });
     setState(() {
       showBrowser = true;
     });
 
     Timer.periodic(Duration(seconds: 2), (timer) async {
-      var data  = await userInfo.doc(userEmail).get();
-      if (data["successful_transaction"]==true){
+      var data = await userInfo.doc(userEmail).get();
+      if (data["successful_transaction"] == true) {
         setState(() {
           showBrowser = false;
           timer.cancel();
         });
-        if (addtoCalendarBool){
+        if (addtoCalendarBool) {
           await addToCalendar();
         }
-        await _alertDialogBuilder('Payment Success!', 'Thank you for your purchase, you can now access the info by clicking on the event', (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> EventsScreen()));});
-
+        await _alertDialogBuilder('Payment Success!',
+            'Thank you for your purchase, you can now access the info by clicking on the event',
+            () {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => EventsScreen()));
+        });
       }
-      if (showBrowser == false){
+      if (showBrowser == false) {
         timer.cancel();
-        
       }
     });
     setState(() {
@@ -375,21 +380,11 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                             setState(() {
                               isBottomLoading = true;
                             });
-                            if (eventItem.price > 0) {
-                              await pay();
 
-                              // await FlutterWebBrowser.openWebPage(
-                              //   url: fullURL,
-                              //   customTabsOptions: CustomTabsOptions(
-                              //     urlBarHidingEnabled: true,
-                              //     addDefaultShareMenuItem: false,
-                              //     showTitle: false,
-                              //   ),
-                              // );
-                              // Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => EventsScreen()));
+                            if (eventItem.price > 0 &&
+                                MemberChecker().checkIfMember(userEmail) ==
+                                    false) {
+                              await pay();
 
                               return;
                             } else {
@@ -405,8 +400,10 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                             if (addtoCalendarBool == true) {
                               await addToCalendar();
                             }
-                            await _alertDialogBuilder('Sent',
-                                'Check your email or calendar to access the event', null);
+                            await _alertDialogBuilder(
+                                'Sent',
+                                'Check your email or calendar to access the event',
+                                null);
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -428,19 +425,6 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Align(
-                  //   alignment: Alignment.topLeft,
-                  //   child: IconButton(
-                  //     icon: Icon(
-                  //       Icons.arrow_back,
-                  //       size: 100,
-                  //       color: Colors.white,
-                  //     ),
-                  //     onPressed: () {
-                  //       Navigator.pop(context);
-                  //     },
-                  //   ),
-                  // ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(

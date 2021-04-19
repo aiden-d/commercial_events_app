@@ -190,7 +190,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                           ? 'Registered'
                           : item.price == 0
                               ? 'Register: FREE'
-                              : 'Register: R${item.price}',
+                              : MemberChecker().checkIfMember(userEmail) ? 'Register: FREE' : 'Register: R${item.price}',
               onPressed: () {
                 if (item.isMembersOnly == true &&
                     MemberChecker().checkIfMember(userEmail) == false) {
