@@ -1,3 +1,4 @@
+import 'package:amcham_app_v2/components/amcham_logo.dart';
 import 'package:amcham_app_v2/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,36 @@ import 'events_screen.dart';
 import 'package:amcham_app_v2/size_config.dart';
 import 'verify_screen.dart';
 import 'package:amcham_app_v2/push_nofitications.dart';
+import 'dart:async';
 
 class LandingPage extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  bool showStartScreen = true;
+  Timer _timer;
+  int _start = 10;
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +52,56 @@ class LandingPage extends StatelessWidget {
               ),
             );
           }
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (showStartScreen) {
+            return Scaffold(
+              backgroundColor: Constants.blueThemeColor,
+              body: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: SizedBox(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                          'lib/images/amchamwidelogotransparent.png'),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "Sponsored By:",
+                      style: Constants.whiteTextStyle,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 8),
+                      child: Container(
+                        color: Colors.white,
+                        child: Center(
+                          child: Text('Advertise here!'),
+                        ),
+                        padding: EdgeInsets.all(8),
+                        height: 50,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Expanded(child: SizedBox()),
+                    Align(
+                      child: Text(
+                        "Created by Aiden Dawes",
+                        style: Constants.whiteTextStyle,
+                      ),
+                      alignment: Alignment.bottomCenter,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done) {
             return StreamBuilder(
                 stream: FirebaseAuth.instance.authStateChanges(),
                 builder: (context, snapshot) {
