@@ -11,11 +11,15 @@ import 'verify_screen.dart';
 import 'package:amcham_app_v2/push_nofitications.dart';
 import 'dart:async';
 
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
+  @override
+  _LandingPageState createState() => _LandingPageState ();
+}
+class _LandingPageState extends State<LandingPage>{
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   bool showStartScreen = true;
   Timer _timer;
-  int _start = 10;
+  int _start = 1;
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
@@ -24,6 +28,7 @@ class LandingPage extends StatelessWidget {
         if (_start == 0) {
           setState(() {
             timer.cancel();
+            showStartScreen = false;
           });
         } else {
           setState(() {
@@ -33,7 +38,11 @@ class LandingPage extends StatelessWidget {
       },
     );
   }
-
+@override
+  void initState() {
+    startTimer();
+    super.initState();
+  }
   @override
   void dispose() {
     _timer.cancel();
