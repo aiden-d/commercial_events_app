@@ -4,8 +4,6 @@ import 'package:amcham_app_v2/constants.dart';
 import 'package:amcham_app_v2/scripts/member_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:amcham_app_v2/components/get_firebase_image.dart';
-import 'events_screen.dart';
 import 'event_register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -190,7 +188,9 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                           ? 'Registered'
                           : item.price == 0
                               ? 'Register: FREE'
-                              : MemberChecker().checkIfMember(userEmail) ? 'Register: FREE' : 'Register: R${item.price}',
+                              : MemberChecker().checkIfMember(userEmail)
+                                  ? 'Register: FREE'
+                                  : 'Register: R${item.price}',
               onPressed: () {
                 if (item.isMembersOnly == true &&
                     MemberChecker().checkIfMember(userEmail) == false) {
