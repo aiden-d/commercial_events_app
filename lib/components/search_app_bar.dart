@@ -6,7 +6,7 @@ class SearchAppbar extends PreferredSize {
   final Function(String string) searchFunction;
   final Function clearFunction;
   SearchAppbar({@required this.searchFunction, @required this.clearFunction});
-  String searchString = '';
+  static String searchString = '';
   bool isSearching = false;
   String getSearchString() {
     return searchString;

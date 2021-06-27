@@ -22,14 +22,19 @@ firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
 
 class EventsScreen extends StatefulWidget {
+  final bool isPastEvents;
+  EventsScreen({@required this.isPastEvents});
   @override
-  _EventsScreenState createState() => _EventsScreenState();
+  _EventsScreenState createState() =>
+      _EventsScreenState(pastEventOverride: isPastEvents);
 }
 
 class _EventsScreenState extends State<EventsScreen> {
+  bool isPastEvents = false;
+  final bool pastEventOverride;
+  _EventsScreenState({this.pastEventOverride});
   int _selectedIndex = 0;
   Container eventItems = Container();
-  bool isPastEvents = false;
   bool isMyEvents = false;
   bool isSearching = false;
   List<int> searchHash = [];
@@ -55,6 +60,12 @@ class _EventsScreenState extends State<EventsScreen> {
   void initState() {
     getData();
     getIfMember();
+    SearchAppbar.searchString = "";
+    if (pastEventOverride == true) {
+      setState(() {
+        isPastEvents = true;
+      });
+    }
     super.initState();
   }
 
@@ -143,76 +154,28 @@ class _EventsScreenState extends State<EventsScreen> {
           SizedBox(
             height: 10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: isPastEvents != true
-                        ? Constants.darkBlueThemeColor
-                        : Constants.blueThemeColor,
-                  ),
-                  child: MaterialButton(
-                    child: Text(
-                      'Upcoming Events',
-                      style: Constants.whiteTextStyle,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isPastEvents = false;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: isPastEvents == true
-                        ? Constants.darkBlueThemeColor
-                        : Constants.blueThemeColor,
-                  ),
-                  child: MaterialButton(
-                    child: Text(
-                      'Past Events',
-                      style: Constants.whiteTextStyle,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isPastEvents = true;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              //TODO add categories
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Container(
-              //     height: 30,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(15),
-              //       color: Constants.blueThemeColor,
-              //     ),
-              //     child: IconButton(
-              //       icon: Icon(
-              //         Icons.format_list_bulleted,
-              //         color: Colors.white,
-              //         size: 20,
-              //       ),
-              //       onPressed: () {},
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
+          // isSearching == true
+          //     ? Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: Center(
+          //           child: Text(
+          //             "Searching...",
+          //             style: Constants.regularHeading,
+          //           ),
+          //         ),
+          //       )
+          //     : SizedBox(),
+          isPastEvents == true
+              ? Center(
+                  child: Text(
+                  "Past Events",
+                  style: Constants.logoTitleStyle.copyWith(color: Colors.black),
+                ))
+              : Center(
+                  child: Text(
+                  "Upcoming Events",
+                  style: Constants.logoTitleStyle.copyWith(color: Colors.black),
+                )),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -506,12 +469,21 @@ class EventsStream extends StatelessWidget {
             }
           }
 
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: eventItems,
-            ),
-          );
+          return eventItems.length != 0
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: eventItems,
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Center(
+                      child: Text(
+                    "No Events",
+                    style: Constants.regularHeading,
+                  )),
+                );
         }
         return Center(
           child: CircularProgressIndicator(

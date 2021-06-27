@@ -23,17 +23,19 @@ class EventRegisterScreen extends StatefulWidget {
   final EventItem eventItem;
   final String id;
   final bool isEventAlreadyOwned;
+  final bool isPastEvent;
   EventRegisterScreen({
     @required this.id,
     @required this.eventItem,
     @required this.isEventAlreadyOwned,
+    @required this.isPastEvent,
   });
   @override
   _EventRegisterScreenState createState() => _EventRegisterScreenState(
-        id: id,
-        eventItem: eventItem,
-        isEventAlreadyOwned: isEventAlreadyOwned,
-      );
+      id: id,
+      eventItem: eventItem,
+      isEventAlreadyOwned: isEventAlreadyOwned,
+      isPastEvent: isPastEvent);
 }
 
 class _EventRegisterScreenState extends State<EventRegisterScreen> {
@@ -41,11 +43,14 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   final EventItem eventItem;
   final String id;
   final bool isEventAlreadyOwned;
+  final bool isPastEvent;
 
-  _EventRegisterScreenState(
-      {@required this.id,
-      @required this.eventItem,
-      @required this.isEventAlreadyOwned});
+  _EventRegisterScreenState({
+    @required this.id,
+    @required this.eventItem,
+    @required this.isEventAlreadyOwned,
+    @required this.isPastEvent,
+  });
   bool isTopLoading = false;
   bool isMidLoading = false;
   bool isBottomLoading = false;
@@ -146,7 +151,12 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   _launchURL() async {
-    String url = eventItem.link;
+    String url;
+    if (isPastEvent) {
+      url = eventItem.pastLink;
+    } else {
+      url = eventItem.link;
+    }
 
     if (await canLaunch(url)) {
       await launch(url);
@@ -284,7 +294,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
           : null,
       //TODO impliment IAP system
       body: Center(
-        child: isEventAlreadyOwned != true
+        child: (isEventAlreadyOwned != true && !isPastEvent)
             ? showBrowser == true
                 ? SafeArea(
                     child: WebBrowser(
@@ -425,10 +435,27 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      'You have already registered for this event',
+                      isPastEvent
+                          ? "Watch it again:"
+                          : 'You have already registered for this event',
                       style: Constants.logoTitleStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -436,52 +463,57 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 2,
                   ),
-                  RoundedButton(
-                    title: 'Resend email',
-                    isLoading: isTopLoading,
-                    onPressed: () async {
-                      setState(() {
-                        isTopLoading = true;
-                      });
-                      //add event ID to user account storage on firebase
+                  (isPastEvent == true)
+                      ? SizedBox()
+                      : RoundedButton(
+                          title: 'Resend email',
+                          isLoading: isTopLoading,
+                          onPressed: () async {
+                            setState(() {
+                              isTopLoading = true;
+                            });
+                            //add event ID to user account storage on firebase
 
-                      print('sending email');
-                      await sendEmail();
+                            print('sending email');
+                            await sendEmail();
 
-                      //send email and pop to previous screen
+                            //send email and pop to previous screen
 
-                      setState(() {
-                        isTopLoading = false;
-                      });
-                    },
-                  ),
+                            setState(() {
+                              isTopLoading = false;
+                            });
+                          },
+                        ),
                   RoundedButton(
                     title: 'Open Link',
                     isLoading: isMidLoading,
                     onPressed: _launchURL,
                   ),
-                  RoundedButton(
-                    title: 'Add to calendar',
-                    isLoading: isBottomLoading,
-                    onPressed: () async {
-                      setState(() {
-                        isBottomLoading = true;
-                      });
-                      //add event ID to user account storage on firebase
+                  (isPastEvent == true)
+                      ? SizedBox()
+                      : RoundedButton(
+                          title: 'Add to calendar',
+                          isLoading: isBottomLoading,
+                          onPressed: () async {
+                            setState(() {
+                              isBottomLoading = true;
+                            });
+                            //add event ID to user account storage on firebase
 
-                      print('adding to calendar');
-                      addToCalendar();
+                            print('adding to calendar');
+                            addToCalendar();
 
-                      //send email and pop to previous screen
+                            //send email and pop to previous screen
 
-                      setState(() {
-                        isBottomLoading = false;
-                      });
-                    },
-                  ),
+                            setState(() {
+                              isBottomLoading = false;
+                            });
+                          },
+                        ),
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 15,
                   ),
+                  Expanded(child: SizedBox()),
                 ],
               ),
       ),

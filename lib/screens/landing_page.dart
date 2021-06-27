@@ -13,15 +13,16 @@ import 'dart:async';
 
 class LandingPage extends StatefulWidget {
   @override
-  _LandingPageState createState() => _LandingPageState ();
+  _LandingPageState createState() => _LandingPageState();
 }
-class _LandingPageState extends State<LandingPage>{
+
+class _LandingPageState extends State<LandingPage> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   bool showStartScreen = true;
   Timer _timer;
   int _start = 1;
   void startTimer() {
-    const oneSec = const Duration(seconds: 1);
+    const oneSec = const Duration(seconds: 3);
     _timer = new Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -38,11 +39,13 @@ class _LandingPageState extends State<LandingPage>{
       },
     );
   }
-@override
+
+  @override
   void initState() {
     startTimer();
     super.initState();
   }
+
   @override
   void dispose() {
     _timer.cancel();

@@ -24,6 +24,7 @@ final _firestore = Firestore.instance;
 class _UpdatesScreenState extends State<UpdatesScreen> {
   @override
   void initState() {
+    SearchAppbar.searchString = "";
     // TODO: implement initState
     super.initState();
   }
@@ -73,6 +74,13 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
           child: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              "News",
+              style: Constants.logoTitleStyle.copyWith(color: Colors.black),
+            ),
             NewsStream(isSearching: isSearching, searchHash: searchHash)
           ],
         ),

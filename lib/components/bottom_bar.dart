@@ -23,6 +23,7 @@ class _BottomBarState extends State<BottomBar> {
   static bool isButton1Active;
   static bool isButton2Active = true;
   static bool isButton3Active;
+  static bool isButton4Active;
   void SetDefault() {
     setState(() {
       isButton1Active = false;
@@ -52,6 +53,7 @@ class _BottomBarState extends State<BottomBar> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
+                tooltip: "News",
                 icon: Icon(CupertinoIcons.news_solid),
                 color: isButton1Active == true
                     ? Constants.blueThemeColor
@@ -61,6 +63,7 @@ class _BottomBarState extends State<BottomBar> {
                     isButton1Active = true;
                     isButton2Active = false;
                     isButton3Active = false;
+                    isButton4Active = false;
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -69,6 +72,7 @@ class _BottomBarState extends State<BottomBar> {
                 },
               ),
               IconButton(
+                tooltip: "Upcoming Events",
                 icon: Icon(CupertinoIcons.calendar),
                 color: isButton2Active == true
                     ? Constants.blueThemeColor
@@ -78,6 +82,7 @@ class _BottomBarState extends State<BottomBar> {
                     isButton1Active = false;
                     isButton2Active = true;
                     isButton3Active = false;
+                    isButton4Active = false;
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -86,15 +91,37 @@ class _BottomBarState extends State<BottomBar> {
                 },
               ),
               IconButton(
+                  tooltip: "Past Events",
+                  icon: Icon(CupertinoIcons.play_circle),
+                  color: isButton3Active == true
+                      ? Constants.blueThemeColor
+                      : Colors.black,
+                  onPressed: () {
+                    setState(() {
+                      isButton1Active = false;
+                      isButton2Active = false;
+                      isButton3Active = true;
+                      isButton4Active = false;
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EventsScreen(
+                                    isPastEvents: true,
+                                  )));
+                    });
+                  }),
+              IconButton(
+                tooltip: "Profile",
                 icon: Icon(CupertinoIcons.person),
-                color: isButton3Active == true
+                color: isButton4Active == true
                     ? Constants.blueThemeColor
                     : Colors.black,
                 onPressed: () {
                   setState(() {
                     isButton1Active = false;
                     isButton2Active = false;
-                    isButton3Active = true;
+                    isButton3Active = false;
+                    isButton4Active = true;
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
