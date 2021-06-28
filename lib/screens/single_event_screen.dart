@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'event_register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class SingleEventScreen extends StatefulWidget {
   String testStr = '';
@@ -47,6 +48,14 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     ),
   );
   BoxDecoration inActiveDecoration = BoxDecoration();
+  YoutubePlayerController _controller = YoutubePlayerController(
+    initialVideoId: YoutubePlayer.convertUrlToId(
+        "https://www.youtube.com/watch?v=feQhHStBVLE"),
+    flags: YoutubePlayerFlags(
+      autoPlay: true,
+      mute: true,
+    ),
+  );
 
   bool isInfoActive = true;
 
@@ -128,101 +137,110 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       appBar: AppBar(
         backgroundColor: Constants.blueThemeColor,
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Container(
-            child: ListView(
-              children: [
-                item,
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isInfoActive = true;
-                          });
-                        },
-                        child: Container(
-                          child: Text('Info'),
-                          decoration: isInfoActive
-                              ? activeDecoration
-                              : inActiveDecoration,
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isInfoActive = false;
-                          });
-                        },
-                        child: Container(
-                          child: Text('Speakers'),
-                          decoration: isInfoActive
-                              ? inActiveDecoration
-                              : activeDecoration,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                isInfoActive
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(item.info),
-                      )
-                    : speakersList,
-              ],
-            ),
+          YoutubePlayer(
+            controller: _controller,
+            showVideoProgressIndicator: true,
           ),
-          Align(
-            //TODO validate whether user has pruchased this item and then write 'owned'
-            alignment: Alignment.bottomCenter,
-            child: RoundedButton(
-              title: (item.isMembersOnly == true &&
-                      MemberChecker().checkIfMember(userEmail) == false)
-                  ? 'Members Only '
-                  : (getDateTimeInt() < getCurrentDateTimeInt() &&
-                          item.archetype == "MS Teams")
-                      ? 'Not Available Yet'
-                      : (getDateTimeInt() < getCurrentDateTimeInt())
-                          ? "Watch it again"
-                          : checkOwnedEvent() == true
-                              ? 'Registered'
-                              : item.price == 0
-                                  ? 'Register: FREE'
-                                  : MemberChecker().checkIfMember(userEmail)
-                                      ? 'Register: FREE'
-                                      : 'Register: R${item.price}',
-              onPressed: () {
-                if (item.isMembersOnly == true &&
-                    MemberChecker().checkIfMember(userEmail) == false) {
-                  return;
-                }
-                if (getDateTimeInt() < getCurrentDateTimeInt() &&
-                    item.archetype == "MS Teams") {
-                  return;
-                }
-                Navigator.push(
-                  //push with price and event ID
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventRegisterScreen(
-                      id: item.id,
-                      eventItem: item,
-                      isEventAlreadyOwned: checkOwnedEvent(),
-                      isPastEvent: getDateTimeInt() < getCurrentDateTimeInt(),
+          Stack(
+            children: [
+              Container(
+                child: ListView(
+                  children: [
+                    item,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                            onPressed: () {
+                              setState(() {
+                                isInfoActive = true;
+                              });
+                            },
+                            child: Container(
+                              child: Text('Info'),
+                              decoration: isInfoActive
+                                  ? activeDecoration
+                                  : inActiveDecoration,
+                            ),
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              setState(() {
+                                isInfoActive = false;
+                              });
+                            },
+                            child: Container(
+                              child: Text('Speakers'),
+                              decoration: isInfoActive
+                                  ? inActiveDecoration
+                                  : activeDecoration,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-              radius: 10,
-              width: 350,
-              colour: Constants.blueThemeColor,
-              textStyle: TextStyle(color: Colors.white),
-            ),
+                    isInfoActive
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(item.info),
+                          )
+                        : speakersList,
+                  ],
+                ),
+              ),
+              Align(
+                //TODO validate whether user has pruchased this item and then write 'owned'
+                alignment: Alignment.bottomCenter,
+                child: RoundedButton(
+                  title: (item.isMembersOnly == true &&
+                          MemberChecker().checkIfMember(userEmail) == false)
+                      ? 'Members Only '
+                      : (getDateTimeInt() < getCurrentDateTimeInt() &&
+                              item.archetype == "MS Teams")
+                          ? 'Not Available Yet'
+                          : (getDateTimeInt() < getCurrentDateTimeInt())
+                              ? "Watch it again"
+                              : checkOwnedEvent() == true
+                                  ? 'Registered'
+                                  : item.price == 0
+                                      ? 'Register: FREE'
+                                      : MemberChecker().checkIfMember(userEmail)
+                                          ? 'Register: FREE'
+                                          : 'Register: R${item.price}',
+                  onPressed: () {
+                    if (item.isMembersOnly == true &&
+                        MemberChecker().checkIfMember(userEmail) == false) {
+                      return;
+                    }
+                    if (getDateTimeInt() < getCurrentDateTimeInt() &&
+                        item.archetype == "MS Teams") {
+                      return;
+                    }
+                    Navigator.push(
+                      //push with price and event ID
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EventRegisterScreen(
+                          id: item.id,
+                          eventItem: item,
+                          isEventAlreadyOwned: checkOwnedEvent(),
+                          isPastEvent:
+                              getDateTimeInt() < getCurrentDateTimeInt(),
+                        ),
+                      ),
+                    );
+                  },
+                  radius: 10,
+                  width: 350,
+                  colour: Constants.blueThemeColor,
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ],
       ),

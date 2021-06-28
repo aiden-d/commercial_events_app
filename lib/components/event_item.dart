@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:amcham_app_v2/constants.dart';
 import 'get_firebase_image.dart';
 import 'package:amcham_app_v2/scripts/member_checker.dart';
-// import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class EventItem extends StatelessWidget {
   MemberChecker memberChecker = new MemberChecker();
@@ -130,15 +129,6 @@ class EventItem extends StatelessWidget {
     return '$hour:$minute';
   }
 
-  // YoutubePlayerController _controller = YoutubePlayerController(
-  //   initialVideoId: "k_RDTVSYSos",
-  //   params: YoutubePlayerParams(
-  //     autoPlay: false,
-  //     showControls: true,
-  //     showFullscreenButton: true,
-  //   ),
-  // );
-
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
@@ -220,6 +210,9 @@ class EventItem extends StatelessWidget {
             ),
             //TODO put container here
             // archetype == "Youtube" && showVid == true
+            //     ?
+            //     :
+
             //     ? YoutubePlayerIFrame(
             //         controller: _controller,
             //         // YoutubePlayerController(
