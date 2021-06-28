@@ -310,7 +310,7 @@ class EventsStream extends StatelessWidget {
 
   EventItem getItem(Map<String, dynamic> data, String id) {
     return new EventItem(
-      pastLink: data['past_link'],
+      youtube_link: data['youtube_link'],
       price: data['price'],
       date: data['date'],
       title: data['title'],
@@ -330,6 +330,7 @@ class EventsStream extends StatelessWidget {
       tier3hashes: data['tier_3_hashes'],
       tier4hashes: data['tier_4_hashes'],
       speakers: data['speakers'],
+      archetype: data["archetype"] != null ? data["archetype"] : "MS Teams",
     );
   }
 

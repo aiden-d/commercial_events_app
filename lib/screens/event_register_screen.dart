@@ -152,9 +152,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
 
   _launchURL() async {
     String url;
-    if (isPastEvent) {
-      url = eventItem.pastLink;
-    } else {
+    if (eventItem.archetype != "Youtube") {
       url = eventItem.link;
     }
 

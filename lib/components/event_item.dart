@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:amcham_app_v2/constants.dart';
 import 'get_firebase_image.dart';
 import 'package:amcham_app_v2/scripts/member_checker.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class EventItem extends StatelessWidget {
   MemberChecker memberChecker = new MemberChecker();
@@ -22,13 +23,15 @@ class EventItem extends StatelessWidget {
   final String info;
   final String id;
   final String link;
-  final String pastLink;
+  final String youtube_link;
   final List<dynamic> registeredUsers;
   final List tier1hashes;
   final List tier2hashes;
   final List tier3hashes;
   final List tier4hashes;
   final List speakers;
+  final String archetype;
+  bool showVid = false;
   bool isButton;
   bool showInfo;
   bool hideSummary;
@@ -56,7 +59,8 @@ class EventItem extends StatelessWidget {
     @required this.tier3hashes,
     @required this.tier4hashes,
     @required this.speakers,
-    @required this.pastLink,
+    @required this.youtube_link,
+    @required this.archetype,
   });
   int rankedPoints;
   int getPointsFromHashes(List<int> searchHashes) {
@@ -125,6 +129,15 @@ class EventItem extends StatelessWidget {
     String minute = numberStr.substring(2, 4);
     return '$hour:$minute';
   }
+
+  YoutubePlayerController _controller = YoutubePlayerController(
+    initialVideoId: "k_RDTVSYSos",
+    params: YoutubePlayerParams(
+      autoPlay: false,
+      showControls: true,
+      showFullscreenButton: true,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -206,9 +219,23 @@ class EventItem extends StatelessWidget {
               ),
             ),
             //TODO put container here
-            Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: LoadFirebaseStorageImage(imageRef: imageRef)),
+            archetype == "Youtube" && showVid == true
+                ? YoutubePlayerIFrame(
+                    controller: _controller,
+                    // YoutubePlayerController(
+                    //   initialVideoId:
+                    //       youtube_link.substring(32, youtube_link.length),
+                    //   params: YoutubePlayerParams(
+                    //     autoPlay: false,
+                    //     showControls: true,
+                    //     showFullscreenButton: true,
+                    //   ),
+                    // ),
+                    aspectRatio: 16 / 9,
+                  )
+                : Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: LoadFirebaseStorageImage(imageRef: imageRef)),
             hideSummary == true ? SizedBox() : Text(summary),
 
             //showInfo == true ? Text(info) : SizedBox(),

@@ -53,6 +53,9 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   final EventItem item;
   @override
   void initState() {
+    setState(() {
+      item.showVid = true;
+    });
     BoxDecoration activeDecoration = BoxDecoration(
       border: Border(
         bottom: BorderSide(width: 2, color: Colors.lightBlue.shade900),
@@ -182,7 +185,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                       MemberChecker().checkIfMember(userEmail) == false)
                   ? 'Members Only '
                   : (getDateTimeInt() < getCurrentDateTimeInt() &&
-                          (item.pastLink == "" || item.pastLink == null))
+                          item.archetype == "MS Teams")
                       ? 'Not Available Yet'
                       : (getDateTimeInt() < getCurrentDateTimeInt())
                           ? "Watch it again"
@@ -199,7 +202,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                   return;
                 }
                 if (getDateTimeInt() < getCurrentDateTimeInt() &&
-                    (item.pastLink == '' || item.pastLink == null)) {
+                    item.archetype == "MS Teams") {
                   return;
                 }
                 Navigator.push(
