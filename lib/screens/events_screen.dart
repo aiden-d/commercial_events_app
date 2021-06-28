@@ -17,7 +17,7 @@ import 'package:amcham_app_v2/scripts/member_checker.dart';
 import 'dart:convert';
 import 'package:amcham_app_v2/components/hashing.dart';
 
-final _firestore = Firestore.instance;
+final _firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
 

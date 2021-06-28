@@ -56,9 +56,9 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   bool isBottomLoading = false;
   String fullURL = "";
   bool showBrowser = false;
-  CollectionReference userInfo =
+  CollectionReference<Map<String, dynamic>> userInfo =
       FirebaseFirestore.instance.collection('UserInfo');
-  CollectionReference eventsInfo =
+  CollectionReference<Map<String, dynamic>> eventsInfo =
       FirebaseFirestore.instance.collection('Events');
   String userEmail = FirebaseAuth.instance.currentUser.email;
 
@@ -79,7 +79,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     await userInfo
         .doc(userEmail)
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
+        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
       if (documentSnapshot.exists) {
         ownedEvents = documentSnapshot.data()['owned_events'];
         if (ownedEvents != null) {
@@ -112,7 +112,10 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     List<dynamic> registeredUsers;
 
 //TODO validate so there is no duplicates
-    await eventsInfo.doc(id).get().then((DocumentSnapshot documentSnapshot) {
+    await eventsInfo
+        .doc(id)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
       if (documentSnapshot.exists) {
         registeredUsers = documentSnapshot.data()['registered_users'];
         if (registeredUsers != null) {
@@ -145,8 +148,8 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     String date = eventItem.DateToString(dateInt) +
         ' at ' +
         eventItem.TimeToString(timeInt);
-    var res = await http.get(
-        'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=$userEmail&subject=Thank you for signing up for ${eventItem.title}&message=Thank you for signing up for <b> ${eventItem.title}  </br> <br>Please access the event on the date: <b> $date </b> </b> <br><br> <b> With the link (if clicking on the link does not work please copy and paste it into the browser): </b> <br> <a href="${eventItem.link}">This Link</a></b><br></br>${eventItem.link}');
+    var res = await http.get(Uri.parse(
+        'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=$userEmail&subject=Thank you for signing up for ${eventItem.title}&message=Thank you for signing up for <b> ${eventItem.title}  </br> <br>Please access the event on the date: <b> $date </b> </b> <br><br> <b> With the link (if clicking on the link does not work please copy and paste it into the browser): </b> <br> <a href="${eventItem.link}">This Link</a></b><br></br>${eventItem.link}'));
     print(res.body);
   }
 
@@ -236,8 +239,8 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
         userEmailString += char;
       }
     }
-    var res = await http.get(
-        'https://us-central1-amcham-app.cloudfunctions.net/genkey?user=$userEmailString');
+    var res = await http.get(Uri.parse(
+        'https://us-central1-amcham-app.cloudfunctions.net/genkey?user=$userEmailString'));
     var userKey = res.body;
 
     String link =

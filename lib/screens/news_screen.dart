@@ -19,7 +19,7 @@ class UpdatesScreen extends StatefulWidget {
   _UpdatesScreenState createState() => _UpdatesScreenState();
 }
 
-final _firestore = Firestore.instance;
+final _firestore = FirebaseFirestore.instance;
 
 class _UpdatesScreenState extends State<UpdatesScreen> {
   @override

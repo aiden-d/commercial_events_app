@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MemberChecker {
-  final firestore = Firestore.instance;
+  final firestore = FirebaseFirestore.instance;
   final userEmail = FirebaseAuth.instance.currentUser.email;
   static bool isMember = false;
   static List emailEndings = [];
@@ -37,7 +37,7 @@ class MemberChecker {
         .collection('Admin')
         .doc('member_emails')
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
+        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
       if (documentSnapshot.exists) {
         emailEndings = documentSnapshot.data()['member_emails'];
         print('endings exist');

@@ -21,8 +21,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       isLoading = true;
     });
     if (message != null && message != '') {
-      var v = await http.get(
-          'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=aidendawes@gmail.com&subject=New ${isBug == true ? 'Bug' : 'Feedback'} reported&message=$message');
+      var v = await http.get(Uri.parse(
+          'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=aidendawes@gmail.com&subject=New ${isBug == true ? 'Bug' : 'Feedback'} reported&message=$message'));
       print(v.body);
       return showDialog(
           context: context,
