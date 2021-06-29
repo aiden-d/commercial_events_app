@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:amcham_app_v2/constants.dart';
 import 'get_firebase_image.dart';
 import 'package:amcham_app_v2/scripts/member_checker.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class EventItem extends StatelessWidget {
-  MemberChecker memberChecker = new MemberChecker();
+class EventItem extends StatefulWidget {
   final int price;
   //date must be formated as year/month/day
   final int date;
@@ -30,13 +30,6 @@ class EventItem extends StatelessWidget {
   final List tier4hashes;
   final List speakers;
   final String archetype;
-  bool showVid = false;
-  bool isButton;
-  bool showInfo;
-  bool hideSummary;
-  bool isInfoSelected = true;
-  Function infoButtonFunction;
-  Function speakersButtonFunction;
 
   EventItem({
     @required this.price,
@@ -62,6 +55,18 @@ class EventItem extends StatelessWidget {
     @required this.archetype,
   });
   int rankedPoints;
+  bool showVid = false;
+  bool isButton;
+
+  bool showInfo;
+
+  bool hideSummary;
+
+  bool isInfoSelected = true;
+
+  Function infoButtonFunction;
+
+  Function speakersButtonFunction;
   int getPointsFromHashes(List<int> searchHashes) {
     int points = 0;
     for (int searchHash in searchHashes) {
@@ -93,7 +98,6 @@ class EventItem extends StatelessWidget {
     return points;
   }
 
-  //date must be formated as year/month/day
   String DateToString(int numberDate) {
     String strNumberDate = numberDate.toString();
     String year = strNumberDate.substring(0, 4);
@@ -130,16 +134,40 @@ class EventItem extends StatelessWidget {
   }
 
   @override
+  _EventItemState createState() => _EventItemState();
+}
+
+class _EventItemState extends State<EventItem> {
+  MemberChecker memberChecker = new MemberChecker();
+  YoutubePlayerController _controller;
+  @override
+  void initState() {
+    if (widget.archetype == "Youtube" && widget.showVid == true) {
+      String yLink = YoutubePlayer.convertUrlToId(widget.youtube_link);
+      print("Link = " + yLink);
+      _controller = YoutubePlayerController(
+        initialVideoId: yLink,
+        flags: YoutubePlayerFlags(
+          autoPlay: true,
+          mute: true,
+        ),
+      );
+    } else
+      print("no vid");
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: isButton == false
+      onPressed: widget.isButton == false
           ? null
           : () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => SingleEventScreen(
-                            item: this,
+                            item: widget,
                           )));
             },
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -158,7 +186,7 @@ class EventItem extends StatelessWidget {
                       width: 10,
                     ),
                     Text(
-                      '${DateToString(this.date)} ${TimeToString(this.startTime)}',
+                      '${widget.DateToString(this.widget.date)} ${widget.TimeToString(this.widget.startTime)}',
                       style: TextStyle(fontSize: 16),
                     )
                   ],
@@ -166,11 +194,14 @@ class EventItem extends StatelessWidget {
                 Text(
                   MemberChecker.isMember == true
                       ? 'FREE ACCESS'
-                      : (price == 0 || price == null ? 'FREE' : 'R$price'),
+                      : (widget.price == 0 || widget.price == null
+                          ? 'FREE'
+                          : 'R${widget.price}'),
                   style: TextStyle(color: Colors.red[900], fontSize: 14),
                 ),
               ],
             ),
+
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 3),
               child: Row(
@@ -178,13 +209,13 @@ class EventItem extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      title,
-                      style: Constants.regularHeading
-                          .copyWith(fontSize: title.length > 25 ? 16 : 19),
+                      widget.title,
+                      style: Constants.regularHeading.copyWith(
+                          fontSize: widget.title.length > 25 ? 16 : 19),
                     ),
                   ),
                   Text(
-                    type,
+                    widget.type,
                     style: TextStyle(
                         color: Constants.blueThemeColor, fontSize: 16),
                   ),
@@ -197,20 +228,25 @@ class EventItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    category,
+                    widget.category,
                     style: TextStyle(
                         color: Constants.blueThemeColor, fontSize: 16),
                   ),
                   Text(
-                    isMembersOnly == true ? 'Members Only' : 'Public',
+                    widget.isMembersOnly == true ? 'Members Only' : 'Public',
                     style: TextStyle(fontSize: 16),
                   ),
                 ],
               ),
             ),
+
             //TODO put container here
-            // archetype == "Youtube" && showVid == true
-            //     ?
+            // widget.archetype == "Youtube" && widget.showVid == true
+            //     ? YoutubePlayer(
+            //         controller: _controller,
+            //         showVideoProgressIndicator: true,
+            //       )
+            //     :
             //     :
 
             //     ? YoutubePlayerIFrame(
@@ -229,8 +265,8 @@ class EventItem extends StatelessWidget {
             //     :
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
-                child: LoadFirebaseStorageImage(imageRef: imageRef)),
-            hideSummary == true ? SizedBox() : Text(summary),
+                child: LoadFirebaseStorageImage(imageRef: widget.imageRef)),
+            widget.hideSummary == true ? SizedBox() : Text(widget.summary),
 
             //showInfo == true ? Text(info) : SizedBox(),
           ],

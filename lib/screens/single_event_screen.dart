@@ -48,14 +48,6 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     ),
   );
   BoxDecoration inActiveDecoration = BoxDecoration();
-  YoutubePlayerController _controller = YoutubePlayerController(
-    initialVideoId: YoutubePlayer.convertUrlToId(
-        "https://www.youtube.com/watch?v=feQhHStBVLE"),
-    flags: YoutubePlayerFlags(
-      autoPlay: true,
-      mute: true,
-    ),
-  );
 
   bool isInfoActive = true;
 
@@ -139,10 +131,6 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       ),
       body: Column(
         children: [
-          YoutubePlayer(
-            controller: _controller,
-            showVideoProgressIndicator: true,
-          ),
           Stack(
             children: [
               Container(
