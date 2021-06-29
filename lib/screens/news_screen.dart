@@ -123,7 +123,7 @@ class NewsStream extends StatelessWidget {
   final bool isSearching;
   final List<int> searchHash;
 
-  NewsStream({@required this.isSearching, @required this.searchHash});
+  NewsStream({required this.isSearching, required this.searchHash});
 
   NewsItem getItem(Map<String, dynamic> data, String id) {
     print('id = $id');
@@ -143,8 +143,8 @@ class NewsStream extends StatelessWidget {
   }
 
   bool getIfMyEvent(Map<String, dynamic> data) {
-    String userEmail = FirebaseAuth.instance.currentUser.email;
-    List registeredUsers = data['registered_users'];
+    String? userEmail = FirebaseAuth.instance.currentUser!.email;
+    List? registeredUsers = data['registered_users'];
 
     if (registeredUsers == null) return false;
     for (var ru in registeredUsers) {
@@ -165,10 +165,10 @@ class NewsStream extends StatelessWidget {
         }
         if (snapshot.connectionState == ConnectionState.done) {
           List<NewsItem> newsItems = [];
-          var newsDocs = snapshot.data.docs;
+          var newsDocs = snapshot.data!.docs;
           for (var news in newsDocs) {
-            Map<String, dynamic> data = news.data();
-            int newsDate = data['date'];
+            Map<String, dynamic> data = news.data() as Map<String, dynamic>;
+            int? newsDate = data['date'];
             DateTime now = new DateTime.now();
             DateTime date = new DateTime(now.year, now.month, now.day);
             String dateString = '${date.year}${date.month}${date.day}';
@@ -195,8 +195,8 @@ class NewsStream extends StatelessWidget {
                   size = newsItems.length;
                   i = -1;
                 } else if (i < size - 1) {
-                  if (newsItems[i].rankedPoints <
-                      newsItems[i + 1].rankedPoints) {
+                  if (newsItems[i].rankedPoints! <
+                      newsItems[i + 1].rankedPoints!) {
                     var temp = newsItems[i + 1];
                     newsItems[i + 1] = newsItems[i];
                     newsItems[i] = temp;
@@ -214,7 +214,7 @@ class NewsStream extends StatelessWidget {
                 isNotSorted = false;
                 int i = 0;
                 while (i + 1 < size) {
-                  if (newsItems[i].dateTime < newsItems[i + 1].dateTime) {
+                  if (newsItems[i].dateTime! < newsItems[i + 1].dateTime!) {
                     var temp = newsItems[i + 1];
                     newsItems[i + 1] = newsItems[i];
                     newsItems[i] = temp;

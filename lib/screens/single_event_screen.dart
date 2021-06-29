@@ -36,7 +36,7 @@ class SingleEventScreen extends StatefulWidget {
     return '$day $month $year';
   }
 
-  SingleEventScreen({@required this.item});
+  SingleEventScreen({required this.item});
   @override
   _SingleEventScreenState createState() => _SingleEventScreenState(item: item);
 }
@@ -80,19 +80,19 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     };
     print('speakers = ${item.speakers}');
     speakersList = new SpeakersList(
-      speakers: item.speakers,
+      speakers: item.speakers as List<dynamic>,
     );
     speakersList.generateSpeakers();
 
     super.initState();
   }
 
-  String userEmail = FirebaseAuth.instance.currentUser.email;
+  String? userEmail = FirebaseAuth.instance.currentUser!.email;
   bool checkOwnedEvent() {
     if (item.registeredUsers == null) {
       return false;
     }
-    List<dynamic> users = item.registeredUsers;
+    Iterable<dynamic> users = item.registeredUsers!;
 
     for (var user in users) {
       if (user.toString() == userEmail) {
@@ -120,8 +120,10 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     return val;
   }
 
-  _SingleEventScreenState({@required this.item});
-  SpeakersList speakersList = new SpeakersList();
+  _SingleEventScreenState({required this.item});
+  SpeakersList speakersList = new SpeakersList(
+    speakers: ["SPEAKERS LOADING"],
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,106 +131,100 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       appBar: AppBar(
         backgroundColor: Constants.blueThemeColor,
       ),
+      floatingActionButton: RoundedButton(
+        title: (item.isMembersOnly == true &&
+                MemberChecker().checkIfMember(userEmail) == false)
+            ? 'Members Only '
+            : (getDateTimeInt() < getCurrentDateTimeInt() &&
+                    item.archetype == "MS Teams")
+                ? 'Not Available Yet'
+                : (getDateTimeInt() < getCurrentDateTimeInt())
+                    ? "Watch it again"
+                    : checkOwnedEvent() == true
+                        ? 'Registered'
+                        : item.price == 0
+                            ? 'Register: FREE'
+                            : MemberChecker().checkIfMember(userEmail)
+                                ? 'Register: FREE'
+                                : 'Register: R${item.price}',
+        onPressed: () {
+          if (item.isMembersOnly == true &&
+              MemberChecker().checkIfMember(userEmail) == false) {
+            return;
+          }
+          if (getDateTimeInt() < getCurrentDateTimeInt() &&
+              item.archetype == "MS Teams") {
+            return;
+          }
+          Navigator.push(
+            //push with price and event ID
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventRegisterScreen(
+                id: item.id,
+                eventItem: item,
+                isEventAlreadyOwned: checkOwnedEvent(),
+                isPastEvent: getDateTimeInt() < getCurrentDateTimeInt(),
+              ),
+            ),
+          );
+        },
+        radius: 10,
+        width: 350,
+        colour: Constants.blueThemeColor,
+        textStyle: TextStyle(color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Column(
         children: [
-          Stack(
-            children: [
-              Container(
-                child: ListView(
-                  children: [
-                    item,
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FlatButton(
-                            onPressed: () {
-                              setState(() {
-                                isInfoActive = true;
-                              });
-                            },
-                            child: Container(
-                              child: Text('Info'),
-                              decoration: isInfoActive
-                                  ? activeDecoration
-                                  : inActiveDecoration,
-                            ),
-                          ),
-                          FlatButton(
-                            onPressed: () {
-                              setState(() {
-                                isInfoActive = false;
-                              });
-                            },
-                            child: Container(
-                              child: Text('Speakers'),
-                              decoration: isInfoActive
-                                  ? inActiveDecoration
-                                  : activeDecoration,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    isInfoActive
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(item.info),
-                          )
-                        : speakersList,
-                  ],
-                ),
-              ),
-              Align(
-                //TODO validate whether user has pruchased this item and then write 'owned'
-                alignment: Alignment.bottomCenter,
-                child: RoundedButton(
-                  title: (item.isMembersOnly == true &&
-                          MemberChecker().checkIfMember(userEmail) == false)
-                      ? 'Members Only '
-                      : (getDateTimeInt() < getCurrentDateTimeInt() &&
-                              item.archetype == "MS Teams")
-                          ? 'Not Available Yet'
-                          : (getDateTimeInt() < getCurrentDateTimeInt())
-                              ? "Watch it again"
-                              : checkOwnedEvent() == true
-                                  ? 'Registered'
-                                  : item.price == 0
-                                      ? 'Register: FREE'
-                                      : MemberChecker().checkIfMember(userEmail)
-                                          ? 'Register: FREE'
-                                          : 'Register: R${item.price}',
-                  onPressed: () {
-                    if (item.isMembersOnly == true &&
-                        MemberChecker().checkIfMember(userEmail) == false) {
-                      return;
-                    }
-                    if (getDateTimeInt() < getCurrentDateTimeInt() &&
-                        item.archetype == "MS Teams") {
-                      return;
-                    }
-                    Navigator.push(
-                      //push with price and event ID
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EventRegisterScreen(
-                          id: item.id,
-                          eventItem: item,
-                          isEventAlreadyOwned: checkOwnedEvent(),
-                          isPastEvent:
-                              getDateTimeInt() < getCurrentDateTimeInt(),
+          Container(
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              children: [
+                item,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            isInfoActive = true;
+                          });
+                        },
+                        child: Container(
+                          child: Text('Info'),
+                          decoration: isInfoActive
+                              ? activeDecoration
+                              : inActiveDecoration,
                         ),
                       ),
-                    );
-                  },
-                  radius: 10,
-                  width: 350,
-                  colour: Constants.blueThemeColor,
-                  textStyle: TextStyle(color: Colors.white),
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            isInfoActive = false;
+                          });
+                        },
+                        child: Container(
+                          child: Text('Speakers'),
+                          decoration: isInfoActive
+                              ? inActiveDecoration
+                              : activeDecoration,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                isInfoActive
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(item.info!),
+                      )
+                    : speakersList,
+              ],
+            ),
           ),
         ],
       ),
@@ -238,7 +234,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
 class SpeakersList extends StatelessWidget {
   final List speakers;
-  SpeakersList({this.speakers});
+  SpeakersList({required this.speakers});
   List<SpeakerItem> speakerItemList = [];
   void generateSpeakers() {
     print('speaekrs 2 = $speakers');
@@ -261,7 +257,7 @@ class SpeakersList extends StatelessWidget {
 }
 
 class SpeakerItem extends StatelessWidget {
-  final String title;
+  final String? title;
   SpeakerItem({this.title});
   @override
   Widget build(BuildContext context) {

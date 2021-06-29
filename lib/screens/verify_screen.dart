@@ -14,8 +14,8 @@ class VerifyScreen extends StatefulWidget {
 
 class _VerifyScreenState extends State<VerifyScreen> {
   final auth = FirebaseAuth.instance;
-  User user;
-  static Timer timer;
+  User? user;
+  static late Timer timer;
   bool isResendLoading = false;
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   void sendMail() async {
     user = auth.currentUser;
-    await user.sendEmailVerification();
+    await user!.sendEmailVerification();
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       checkEmailVerified();
     });
@@ -61,8 +61,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   Future<void> checkEmailVerified() async {
     user = auth.currentUser;
-    await user.reload();
-    if (user.emailVerified) {
+    await user!.reload();
+    if (user!.emailVerified) {
       timer.cancel();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LandingPage()));
@@ -95,7 +95,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       borderRadius: BorderRadius.circular(16),
                       color: Colors.white),
                   child: Text(
-                    'An email has been sent to ${auth.currentUser.email} please verify before logging in...',
+                    'An email has been sent to ${auth.currentUser!.email} please verify before logging in...',
                     style: TextStyle(fontSize: 16, color: Colors.black),
                   ),
                 ),

@@ -6,9 +6,9 @@ import 'package:amcham_app_v2/screens/events_screen.dart';
 import 'package:amcham_app_v2/screens/profile_screen.dart';
 
 class BottomBar extends StatefulWidget {
-  final bool isEventsScreen;
+  final bool? isEventsScreen;
   BottomBar({this.isEventsScreen});
-  bool getIsEventsScreen() {
+  bool? getIsEventsScreen() {
     return isEventsScreen;
   }
 
@@ -18,12 +18,12 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  final bool isEventsScreen;
+  final bool? isEventsScreen;
   _BottomBarState({this.isEventsScreen});
-  static bool isButton1Active;
+  static bool? isButton1Active;
   static bool isButton2Active = true;
-  static bool isButton3Active;
-  static bool isButton4Active;
+  static bool? isButton3Active;
+  static bool? isButton4Active;
   void SetDefault() {
     setState(() {
       isButton1Active = false;
@@ -86,7 +86,9 @@ class _BottomBarState extends State<BottomBar> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EventsScreen()));
+                            builder: (context) => EventsScreen(
+                                  isPastEvents: false,
+                                )));
                   });
                 },
               ),

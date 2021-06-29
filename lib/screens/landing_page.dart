@@ -18,7 +18,7 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   bool showStartScreen = true;
-  Timer _timer;
+  late Timer _timer;
   int _start = 1;
   void startTimer() {
     const oneSec = const Duration(seconds: 3);
@@ -113,11 +113,11 @@ class _LandingPageState extends State<LandingPage> {
               ),
             );
           } else if (snapshot.connectionState == ConnectionState.done) {
-            return StreamBuilder(
+            return StreamBuilder<User?>(
                 stream: FirebaseAuth.instance.authStateChanges(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
-                    User _user = snapshot.data;
+                    User? _user = snapshot.data;
                     SizeConfig().init(context);
                     if (_user == null) {
                       print('need to log in');
@@ -125,11 +125,13 @@ class _LandingPageState extends State<LandingPage> {
                       return HomePage();
                     } else {
                       print('logged in');
-                      if (FirebaseAuth.instance.currentUser.emailVerified ==
+                      if (FirebaseAuth.instance.currentUser!.emailVerified ==
                           false) {
                         return VerifyScreen();
                       } else {
-                        return EventsScreen();
+                        return EventsScreen(
+                          isPastEvents: false,
+                        );
                       }
                       //user is logged in
 

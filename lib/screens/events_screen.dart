@@ -23,7 +23,7 @@ firebase_storage.FirebaseStorage storage =
 
 class EventsScreen extends StatefulWidget {
   final bool isPastEvents;
-  EventsScreen({@required this.isPastEvents});
+  EventsScreen({required this.isPastEvents});
   @override
   _EventsScreenState createState() =>
       _EventsScreenState(pastEventOverride: isPastEvents);
@@ -31,7 +31,7 @@ class EventsScreen extends StatefulWidget {
 
 class _EventsScreenState extends State<EventsScreen> {
   bool isPastEvents = false;
-  final bool pastEventOverride;
+  final bool? pastEventOverride;
   _EventsScreenState({this.pastEventOverride});
   int _selectedIndex = 0;
   Container eventItems = Container();
@@ -71,12 +71,12 @@ class _EventsScreenState extends State<EventsScreen> {
 
   MemberChecker memberChecker = new MemberChecker();
   Future<void> getIfMember() async {
-    String email = FirebaseAuth.instance.currentUser.email;
+    String? email = FirebaseAuth.instance.currentUser!.email;
     await memberChecker.updateEndings();
   }
 
   printMember() {
-    String email = FirebaseAuth.instance.currentUser.email;
+    String? email = FirebaseAuth.instance.currentUser!.email;
   }
 
   List<String> seperateWords(String str) {
@@ -303,10 +303,10 @@ class EventsStream extends StatelessWidget {
   final List<int> searchHash;
 
   EventsStream(
-      {@required this.isPastEvents,
-      @required this.isMyEvents,
-      @required this.isSearching,
-      @required this.searchHash});
+      {required this.isPastEvents,
+      required this.isMyEvents,
+      required this.isSearching,
+      required this.searchHash});
 
   EventItem getItem(Map<String, dynamic> data, String id) {
     return new EventItem(
@@ -335,8 +335,8 @@ class EventsStream extends StatelessWidget {
   }
 
   bool getIfMyEvent(Map<String, dynamic> data) {
-    String userEmail = FirebaseAuth.instance.currentUser.email;
-    List registeredUsers = data['registered_users'];
+    String? userEmail = FirebaseAuth.instance.currentUser!.email;
+    List? registeredUsers = data['registered_users'];
 
     if (registeredUsers == null) return false;
     for (var ru in registeredUsers) {
@@ -369,34 +369,34 @@ class EventsStream extends StatelessWidget {
         }
         if (snapshot.connectionState == ConnectionState.done) {
           List<EventItem> eventItems = [];
-          var events = snapshot.data.docs;
+          var events = snapshot.data!.docs;
           for (var event in events) {
-            Map<String, dynamic> data = event.data();
-            int eventDate = data['date'];
+            Map<String, dynamic> data = event.data() as Map<String, dynamic>;
+            int? eventDate = data['date'];
             DateTime now = new DateTime.now();
             DateTime date = new DateTime(now.year, now.month, now.day);
             int dateInt = getCurrentDateTimeInt();
             if (isMyEvents) {
               if (getIfMyEvent(data) == true) {
                 if (isPastEvents == true) {
-                  if (eventDate <= dateInt) {
+                  if (eventDate! <= dateInt) {
                     EventItem eventItem = getItem(data, event.id);
                     eventItems.add(eventItem);
                   }
                 } else {
-                  if (eventDate >= dateInt) {
+                  if (eventDate! >= dateInt) {
                     EventItem eventItem = getItem(data, event.id);
                     eventItems.add(eventItem);
                   }
                 }
               }
             } else if (isPastEvents == true) {
-              if (eventDate <= dateInt) {
+              if (eventDate! <= dateInt) {
                 EventItem eventItem = getItem(data, event.id);
                 eventItems.add(eventItem);
               }
             } else {
-              if (eventDate >= dateInt) {
+              if (eventDate! >= dateInt) {
                 EventItem eventItem = getItem(data, event.id);
                 eventItems.add(eventItem);
               }
@@ -421,8 +421,8 @@ class EventsStream extends StatelessWidget {
                   size = eventItems.length;
                   i = -1;
                 } else if (i < size - 1) {
-                  if (eventItems[i].rankedPoints <
-                      eventItems[i + 1].rankedPoints) {
+                  if (eventItems[i].rankedPoints! <
+                      eventItems[i + 1].rankedPoints!) {
                     var temp = eventItems[i + 1];
                     eventItems[i + 1] = eventItems[i];
                     eventItems[i] = temp;
@@ -440,7 +440,7 @@ class EventsStream extends StatelessWidget {
                 isNotSorted = false;
                 int i = 0;
                 while (i + 1 < size) {
-                  if (eventItems[i].date < eventItems[i + 1].date) {
+                  if (eventItems[i].date! < eventItems[i + 1].date!) {
                     var temp = eventItems[i + 1];
                     eventItems[i + 1] = eventItems[i];
                     eventItems[i] = temp;
@@ -458,7 +458,7 @@ class EventsStream extends StatelessWidget {
                 isNotSorted = false;
                 int i = 0;
                 while (i + 1 < size) {
-                  if (eventItems[i].date > eventItems[i + 1].date) {
+                  if (eventItems[i].date! > eventItems[i + 1].date!) {
                     var temp = eventItems[i + 1];
                     eventItems[i + 1] = eventItems[i];
                     eventItems[i] = temp;

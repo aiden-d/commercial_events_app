@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amcham_app_v2/constants.dart';
 
-class SearchAppbar extends PreferredSize {
+class SearchAppbar extends StatelessWidget {
   final Function(String string) searchFunction;
   final Function clearFunction;
-  SearchAppbar({@required this.searchFunction, @required this.clearFunction});
+  SearchAppbar({required this.searchFunction, required this.clearFunction});
   static String searchString = '';
   bool isSearching = false;
   String getSearchString() {

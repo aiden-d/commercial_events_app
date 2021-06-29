@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
   }
 
-  Future<String> _loginToAccount() async {
+  Future<String?> _loginToAccount() async {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: _email, password: _password);
@@ -60,11 +60,11 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       isLoading = true;
     });
-    String _createAccountFeedback = await _loginToAccount();
+    String? _createAccountFeedback = await _loginToAccount();
 
     if (_createAccountFeedback != null) {
       _alertDialogBuilder('Error', _createAccountFeedback);
-    } else if (FirebaseAuth.instance.currentUser.emailVerified == false) {
+    } else if (FirebaseAuth.instance.currentUser!.emailVerified == false) {
       Navigator.push(
           (context), MaterialPageRoute(builder: (context) => VerifyScreen()));
     } else {
@@ -80,11 +80,11 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email = "";
   String _password = "";
 
-  FocusNode _lastNameFocusNode;
-  FocusNode _companyFocusNode;
-  FocusNode _emailFocusNode;
-  FocusNode _passwordFocusNode;
-  FocusNode _passwordConfFocusNode;
+  late FocusNode _lastNameFocusNode;
+  late FocusNode _companyFocusNode;
+  FocusNode? _emailFocusNode;
+  FocusNode? _passwordFocusNode;
+  late FocusNode _passwordConfFocusNode;
   @override
   void initState() {
     _lastNameFocusNode = FocusNode();
@@ -100,8 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _lastNameFocusNode.dispose();
     _companyFocusNode.dispose();
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
+    _emailFocusNode!.dispose();
+    _passwordFocusNode!.dispose();
     _passwordConfFocusNode.dispose();
 
     super.dispose();
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     focusNode: _emailFocusNode,
                     onSubmitted: (value) {
-                      _passwordFocusNode.requestFocus();
+                      _passwordFocusNode!.requestFocus();
                     },
                     textInputAction: TextInputAction.next,
                   ),

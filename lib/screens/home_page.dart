@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: SizeConfig().getBlockSizeVertical() * 5,
+                  height: SizeConfig().getBlockSizeVertical()! * 5,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 SizedBox(
-                  height: SizeConfig().getBlockSizeVertical() * 4,
+                  height: SizeConfig().getBlockSizeVertical()! * 4,
                 ),
                 RoundedButton(
                   onPressed: () {

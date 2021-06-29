@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   //create new user account
-  Future<String> _createAccount() async {
+  Future<String?> _createAccount() async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: _email, password: _password);
@@ -78,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() {
       isLoading = true;
     });
-    String _createAccountFeedback = await _createAccount();
+    String? _createAccountFeedback = await _createAccount();
     if (_createAccountFeedback != null) {
       _alertDialogBuilder(_createAccountFeedback);
     } else {
@@ -99,11 +99,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String _password = "";
   String _passwordConf = "";
   String _company = "";
-  FocusNode _lastNameFocusNode;
-  FocusNode _companyFocusNode;
-  FocusNode _emailFocusNode;
-  FocusNode _passwordFocusNode;
-  FocusNode _passwordConfFocusNode;
+  FocusNode? _lastNameFocusNode;
+  FocusNode? _companyFocusNode;
+  FocusNode? _emailFocusNode;
+  FocusNode? _passwordFocusNode;
+  FocusNode? _passwordConfFocusNode;
   @override
   void initState() {
     _lastNameFocusNode = FocusNode();
@@ -117,11 +117,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _lastNameFocusNode.dispose();
-    _companyFocusNode.dispose();
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    _passwordConfFocusNode.dispose();
+    _lastNameFocusNode!.dispose();
+    _companyFocusNode!.dispose();
+    _emailFocusNode!.dispose();
+    _passwordFocusNode!.dispose();
+    _passwordConfFocusNode!.dispose();
     // TODO: implement dispose
     super.dispose();
   }
@@ -216,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       _firstName = value;
                     },
                     onSubmitted: (value) {
-                      _lastNameFocusNode.requestFocus();
+                      _lastNameFocusNode!.requestFocus();
                     },
                     textInputAction: TextInputAction.next,
                   ),
@@ -230,7 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     focusNode: _lastNameFocusNode,
                     onSubmitted: (value) {
-                      _companyFocusNode.requestFocus();
+                      _companyFocusNode!.requestFocus();
                     },
                     textInputAction: TextInputAction.next,
                   ),
@@ -244,7 +244,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     focusNode: _companyFocusNode,
                     onSubmitted: (value) {
-                      _emailFocusNode.requestFocus();
+                      _emailFocusNode!.requestFocus();
                     },
                     textInputAction: TextInputAction.next,
                   ),
@@ -258,7 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     focusNode: _emailFocusNode,
                     onSubmitted: (value) {
-                      _passwordFocusNode.requestFocus();
+                      _passwordFocusNode!.requestFocus();
                     },
                     textInputAction: TextInputAction.next,
                   ),
@@ -272,7 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     focusNode: _passwordFocusNode,
                     onSubmitted: (value) {
-                      _passwordConfFocusNode.requestFocus();
+                      _passwordConfFocusNode!.requestFocus();
                     },
                     isPasswordField: true,
                     textInputAction: TextInputAction.next,

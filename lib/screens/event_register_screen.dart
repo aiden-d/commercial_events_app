@@ -25,10 +25,10 @@ class EventRegisterScreen extends StatefulWidget {
   final bool isEventAlreadyOwned;
   final bool isPastEvent;
   EventRegisterScreen({
-    @required this.id,
-    @required this.eventItem,
-    @required this.isEventAlreadyOwned,
-    @required this.isPastEvent,
+    required this.id,
+    required this.eventItem,
+    required this.isEventAlreadyOwned,
+    required this.isPastEvent,
   });
   @override
   _EventRegisterScreenState createState() => _EventRegisterScreenState(
@@ -46,10 +46,10 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   final bool isPastEvent;
 
   _EventRegisterScreenState({
-    @required this.id,
-    @required this.eventItem,
-    @required this.isEventAlreadyOwned,
-    @required this.isPastEvent,
+    required this.id,
+    required this.eventItem,
+    required this.isEventAlreadyOwned,
+    required this.isPastEvent,
   });
   bool isTopLoading = false;
   bool isMidLoading = false;
@@ -60,7 +60,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
       FirebaseFirestore.instance.collection('UserInfo');
   CollectionReference<Map<String, dynamic>> eventsInfo =
       FirebaseFirestore.instance.collection('Events');
-  String userEmail = FirebaseAuth.instance.currentUser.email;
+  String? userEmail = FirebaseAuth.instance.currentUser!.email;
 
   bool isThereDuplicate(List<dynamic> array, var itemToCheck) {
     for (var item in array) {
@@ -73,7 +73,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   Future<void> updateUser() async {
-    List<dynamic> ownedEvents;
+    List<dynamic>? ownedEvents;
 
 //TODO validate so there is no duplicates
     await userInfo
@@ -81,14 +81,14 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
         .get()
         .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
       if (documentSnapshot.exists) {
-        ownedEvents = documentSnapshot.data()['owned_events'];
+        ownedEvents = documentSnapshot.data()!['owned_events'];
         if (ownedEvents != null) {
-          if (isThereDuplicate(ownedEvents, id)) {
+          if (isThereDuplicate(ownedEvents!, id)) {
             print('User already added');
             return null;
             //TODO show error
           } else {
-            ownedEvents.add(id);
+            ownedEvents!.add(id);
           }
         } else {
           ownedEvents = [id];
@@ -108,8 +108,8 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   Future<void> updateEvent() async {
-    String userEmail = FirebaseAuth.instance.currentUser.email;
-    List<dynamic> registeredUsers;
+    String? userEmail = FirebaseAuth.instance.currentUser!.email;
+    List<dynamic>? registeredUsers;
 
 //TODO validate so there is no duplicates
     await eventsInfo
@@ -117,13 +117,13 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
         .get()
         .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
       if (documentSnapshot.exists) {
-        registeredUsers = documentSnapshot.data()['registered_users'];
+        registeredUsers = documentSnapshot.data()!['registered_users'];
         if (registeredUsers != null) {
-          if (isThereDuplicate(registeredUsers, userEmail)) {
+          if (isThereDuplicate(registeredUsers!, userEmail)) {
             print('User already added');
             return null;
           } else {
-            registeredUsers.add(userEmail);
+            registeredUsers!.add(userEmail);
           }
         } else {
           registeredUsers = [userEmail];
@@ -143,8 +143,8 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   Future<void> sendEmail() async {
-    int dateInt = eventItem.date;
-    int timeInt = eventItem.startTime;
+    int? dateInt = eventItem.date;
+    int? timeInt = eventItem.startTime;
     String date = eventItem.DateToString(dateInt) +
         ' at ' +
         eventItem.TimeToString(timeInt);
@@ -154,12 +154,12 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   _launchURL() async {
-    String url;
+    String? url;
     if (eventItem.archetype != "Youtube") {
       url = eventItem.link;
     }
 
-    if (await canLaunch(url)) {
+    if (await canLaunch(url!)) {
       await launch(url);
     } else {
       throw 'Could not launch $url';
@@ -168,7 +168,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
 
   void addToCalendar() async {
     Event event = Event(
-      title: eventItem.title,
+      title: eventItem.title!,
       description: '${eventItem.link}',
       startDate: getDateFromItem(eventItem.startTime),
       endDate: getDateFromItem(eventItem.endTime),
@@ -179,7 +179,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     return;
   }
 
-  DateTime getDateFromItem(int time) {
+  DateTime getDateFromItem(int? time) {
     String dateStr = eventItem.date.toString();
     String timeStr =
         time.toString().length >= 4 ? time.toString() : '0' + time.toString();
@@ -199,7 +199,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   Future<void> _alertDialogBuilder(
-      String title, String info, Function closeFunction) async {
+      String title, String info, Function? closeFunction) async {
     return showDialog(
         barrierDismissible: false,
         context: context,
@@ -212,7 +212,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
             actions: [
               FlatButton(
                   onPressed: closeFunction != null
-                      ? closeFunction
+                      ? closeFunction as void Function()?
                       : () {
                           Navigator.pop(context);
                         },
@@ -223,7 +223,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
   }
 
   String getPriceString() {
-    if (eventItem.price > 0 && !MemberChecker().checkIfMember(userEmail)) {
+    if (eventItem.price! > 0 && !MemberChecker().checkIfMember(userEmail)) {
       return 'R${eventItem.price}';
     }
     return 'FREE';
@@ -231,8 +231,8 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
 
   Future<void> pay() async {
     String userEmailString = '';
-    for (int i = 0; i < userEmail.length; i++) {
-      var char = userEmail[i];
+    for (int i = 0; i < userEmail!.length; i++) {
+      var char = userEmail![i];
       if (char == '@') {
         userEmailString += "%40";
       } else {
@@ -264,14 +264,18 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
           showBrowser = false;
           timer.cancel();
         });
-        if (addtoCalendarBool) {
-          await addToCalendar();
+        if (addtoCalendarBool!) {
+          addToCalendar();
         }
         await _alertDialogBuilder('Payment Success!',
             'Thank you for your purchase, you can now access the info by clicking on the event',
             () {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => EventsScreen()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EventsScreen(
+                        isPastEvents: false,
+                      )));
         });
       }
       if (showBrowser == false) {
@@ -283,7 +287,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     });
   }
 
-  bool addtoCalendarBool = false;
+  bool? addtoCalendarBool = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -347,7 +351,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                         style: Constants.logoTitleStyle,
                       ),
                       SizedBox(
-                        height: SizeConfig.blockSizeVertical * 8,
+                        height: SizeConfig.blockSizeVertical! * 8,
                       ),
                       Text(
                         eventItem.price == 0
@@ -357,7 +361,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(
-                        height: SizeConfig.blockSizeVertical * 2,
+                        height: SizeConfig.blockSizeVertical! * 2,
                       ),
                       kIsWeb == true
                           ? SizedBox()
@@ -392,7 +396,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                               isBottomLoading = true;
                             });
 
-                            if (eventItem.price > 0 &&
+                            if (eventItem.price! > 0 &&
                                 MemberChecker().checkIfMember(userEmail) ==
                                     false) {
                               await pay();
@@ -409,7 +413,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
 
                             await sendEmail();
                             if (addtoCalendarBool == true) {
-                              await addToCalendar();
+                              addToCalendar();
                             }
                             await _alertDialogBuilder(
                                 'Sent',
@@ -418,7 +422,9 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EventsScreen(),
+                                  builder: (context) => EventsScreen(
+                                    isPastEvents: false,
+                                  ),
                                 ));
 
                             //send email and pop to previous screen
@@ -428,7 +434,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                             });
                           }),
                       SizedBox(
-                        height: SizeConfig.blockSizeVertical * 20,
+                        height: SizeConfig.blockSizeVertical! * 20,
                       ),
                     ],
                   )
@@ -462,7 +468,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: SizeConfig.blockSizeVertical * 2,
+                    height: SizeConfig.blockSizeVertical! * 2,
                   ),
                   (isPastEvent == true)
                       ? SizedBox()
@@ -512,7 +518,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                           },
                         ),
                   SizedBox(
-                    height: SizeConfig.blockSizeVertical * 15,
+                    height: SizeConfig.blockSizeVertical! * 15,
                   ),
                   Expanded(child: SizedBox()),
                 ],

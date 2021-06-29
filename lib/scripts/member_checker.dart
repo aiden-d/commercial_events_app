@@ -3,23 +3,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class MemberChecker {
   final firestore = FirebaseFirestore.instance;
-  final userEmail = FirebaseAuth.instance.currentUser.email;
+  final userEmail = FirebaseAuth.instance.currentUser!.email;
   static bool isMember = false;
-  static List emailEndings = [];
+  static List? emailEndings = [];
 //TODO create update endings fucntion
   MemberChecker();
   void main() {
     checkIfMember('aidendawes@gmail.com');
   }
 
-  bool checkIfMember(String email) {
-    if (emailEndings.length == 0) {
+  bool checkIfMember(String? email) {
+    if (emailEndings!.length == 0) {
       print('emails ending null');
       return false;
     }
-    for (var _end in emailEndings) {
+    for (var _end in emailEndings!) {
       String e = _end.toString();
-      int start = email.length - e.length;
+      int start = email!.length - e.length;
       int end = start + e.length;
       String newEnding = email.substring(start, end);
       print(newEnding);
@@ -39,7 +39,7 @@ class MemberChecker {
         .get()
         .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
       if (documentSnapshot.exists) {
-        emailEndings = documentSnapshot.data()['member_emails'];
+        emailEndings = documentSnapshot.data()!['member_emails'];
         print('endings exist');
         print(checkIfMember(userEmail));
 

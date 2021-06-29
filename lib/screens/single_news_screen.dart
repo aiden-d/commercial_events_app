@@ -38,7 +38,7 @@ class SingleNewsScreen extends StatefulWidget {
     return '$day $month $year';
   }
 
-  SingleNewsScreen({@required this.item});
+  SingleNewsScreen({required this.item});
   @override
   _SingleNewsScreenState createState() => _SingleNewsScreenState(item: item);
 }
@@ -54,17 +54,17 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
   bool isInfoActive = true;
   bool isLinkActive = false;
   final NewsItem item;
-  String url;
+  String? url;
   @override
   void initState() {
     if (item.link != null && item.link != '' && item.link != ' ') {
       isLinkActive = true;
       url = item.link;
-      if (url.substring(0, 8) != 'https://' &&
-          url.substring(0, 7) != 'http://') {
-        url = 'https://' + url;
+      if (url!.substring(0, 8) != 'https://' &&
+          url!.substring(0, 7) != 'http://') {
+        url = 'https://' + url!;
       } else {}
-      print('ss = ' + url);
+      print('ss = ' + url!);
     }
     BoxDecoration activeDecoration = BoxDecoration(
       border: Border(
@@ -94,16 +94,16 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
   }
 
   _launchURL() async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunch(url!)) {
+      await launch(url!);
     } else {
       throw 'Could not launch ${url}';
     }
   }
 
-  String userEmail = FirebaseAuth.instance.currentUser.email;
+  String? userEmail = FirebaseAuth.instance.currentUser!.email;
 
-  _SingleNewsScreenState({@required this.item});
+  _SingleNewsScreenState({required this.item});
 
   @override
   Widget build(BuildContext context) {

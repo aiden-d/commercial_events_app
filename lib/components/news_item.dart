@@ -8,54 +8,54 @@ import 'package:amcham_app_v2/scripts/member_checker.dart';
 
 class NewsItem extends StatelessWidget {
   //date must be formated as year/month/day/hour/minute
-  final int dateTime;
+  final int? dateTime;
   //time formatted as hhmm or hour hour minute minute
-  final String summaryText;
-  final String imageRef;
-  final String info;
+  final String? summaryText;
+  final String? imageRef;
+  final String? info;
   final String id;
-  final List tier1hashes;
-  final List tier2hashes;
-  final List tier3hashes;
-  final String title;
-  final String link;
-  bool isButton;
+  final List? tier1hashes;
+  final List? tier2hashes;
+  final List? tier3hashes;
+  final String? title;
+  final String? link;
+  bool? isButton;
 
-  bool showInfo;
-  bool hideSummary;
+  bool? showInfo;
+  bool? hideSummary;
   bool isInfoSelected = true;
-  Function infoButtonFunction;
-  Function speakersButtonFunction;
+  Function? infoButtonFunction;
+  Function? speakersButtonFunction;
   bool enableImage = false;
 
   NewsItem({
-    @required this.link,
-    @required this.dateTime,
-    @required this.summaryText,
-    @required this.imageRef,
-    @required this.info,
-    @required this.id,
-    @required this.tier1hashes,
-    @required this.tier2hashes,
-    @required this.tier3hashes,
-    @required this.title,
+    required this.link,
+    required this.dateTime,
+    required this.summaryText,
+    required this.imageRef,
+    required this.info,
+    required this.id,
+    required this.tier1hashes,
+    required this.tier2hashes,
+    required this.tier3hashes,
+    required this.title,
   });
-  int rankedPoints;
+  int? rankedPoints;
 
   int getPointsFromHashes(List<int> searchHashes) {
     int points = 0;
     for (int searchHash in searchHashes) {
-      for (var hash in tier1hashes) {
+      for (var hash in tier1hashes!) {
         if (hash == searchHash) {
           points += 100;
         }
       }
-      for (var hash in tier2hashes) {
+      for (var hash in tier2hashes!) {
         if (hash == searchHash) {
           points += 75;
         }
       }
-      for (var hash in tier3hashes) {
+      for (var hash in tier3hashes!) {
         if (hash == searchHash) {
           points += 30;
         }
@@ -74,7 +74,7 @@ class NewsItem extends StatelessWidget {
   }
 
   //date must be formated as year/month/day
-  String DateToString(int numberDate) {
+  String DateToString(int? numberDate) {
     String strNumberDate = numberDate.toString();
     String year = strNumberDate.substring(0, 4);
     String month = strNumberDate.substring(4, 6);
@@ -134,7 +134,7 @@ class NewsItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    title,
+                    title!,
                     style: Constants.regularHeading,
                   ),
                 ],
@@ -167,11 +167,11 @@ class NewsItem extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: LoadFirebaseStorageImage(imageRef: imageRef))
                 : SizedBox(),
-            hideSummary == true ? SizedBox() : Text(summaryText),
+            hideSummary == true ? SizedBox() : Text(summaryText!),
 
             showInfo == true
                 ? Text(
-                    info,
+                    info!,
                     style: Constants.regularHeading
                         .copyWith(fontSize: 16, fontStyle: FontStyle.normal),
                   )

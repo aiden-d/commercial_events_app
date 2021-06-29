@@ -20,12 +20,12 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  String email;
-  String firstName;
-  String lastName;
-  String company;
-  bool isInfoLoading;
-  bool isPasswordLoading;
+  String? email;
+  String? firstName;
+  String? lastName;
+  String? company;
+  bool? isInfoLoading;
+  bool? isPasswordLoading;
   Future<void> _alertDialogBuilder(String title, String info) async {
     return showDialog(
         barrierDismissible: false,
@@ -49,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    User user = FirebaseAuth.instance.currentUser;
+    User user = FirebaseAuth.instance.currentUser!;
     email = user.email;
     getInfo();
     getIfMember();
@@ -60,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   MemberChecker memberChecker = new MemberChecker();
   Future<void> getIfMember() async {
     setState(() async {
-      String email = FirebaseAuth.instance.currentUser.email;
+      String? email = FirebaseAuth.instance.currentUser!.email;
       await memberChecker.updateEndings();
     });
   }
@@ -87,9 +87,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        Map<String, dynamic> data = documentSnapshot.data();
+        Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
         setState(() {
-          firstName = data["first_name"];
+          firstName = data!["first_name"];
           print(firstName);
           lastName = data["last_name"];
           print(lastName);
@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Text(
                                 MemberChecker().checkIfMember(FirebaseAuth
-                                            .instance.currentUser.email) ==
+                                            .instance.currentUser!.email) ==
                                         true
                                     ? 'AMCHAM member'
                                     : 'Not an AMCHAM member',
@@ -241,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 isPasswordLoading = true;
                               });
                               await _firebaseAuth.sendPasswordResetEmail(
-                                  email: email);
+                                  email: email!);
                               setState(() {
                                 isPasswordLoading = false;
                               });
@@ -283,14 +283,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 class dataInput extends StatelessWidget {
   const dataInput(
-      {Key key,
-      @required this.title,
-      @required this.data,
-      @required this.onChanged})
+      {Key? key,
+      required this.title,
+      required this.data,
+      required this.onChanged})
       : super(key: key);
 
   final String title;
-  final String data;
+  final String? data;
   final Function(String) onChanged;
   @override
   Widget build(BuildContext context) {
