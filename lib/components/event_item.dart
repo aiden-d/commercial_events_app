@@ -149,7 +149,7 @@ class _EventItemState extends State<EventItem> {
       _controller = YoutubePlayerController(
         initialVideoId: yLink,
         flags: YoutubePlayerFlags(
-          autoPlay: false,
+          autoPlay: true,
           mute: true,
         ),
       );
@@ -246,6 +246,7 @@ class _EventItemState extends State<EventItem> {
                 ? YoutubePlayerBuilder(
                     player: YoutubePlayer(
                       controller: _controller,
+                      showVideoProgressIndicator: true,
                     ),
                     builder: (context, player) {
                       return Column(
