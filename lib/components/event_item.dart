@@ -98,6 +98,9 @@ class EventItem extends StatefulWidget {
     return points;
   }
 
+  YoutubePlayerController _controller =
+      YoutubePlayerController(initialVideoId: "QRWijH8KNFU");
+
   String DateToString(int? numberDate) {
     String strNumberDate = numberDate.toString();
     String year = strNumberDate.substring(0, 4);
@@ -139,18 +142,17 @@ class EventItem extends StatefulWidget {
 
 class _EventItemState extends State<EventItem> {
   MemberChecker memberChecker = new MemberChecker();
-  YoutubePlayerController _controller =
-      YoutubePlayerController(initialVideoId: "QRWijH8KNFU");
+
   @override
   void initState() {
     if (widget.archetype == "Youtube" && widget.showVid == true) {
       String yLink = YoutubePlayer.convertUrlToId(widget.youtube_link!)!;
       print("Link = " + yLink);
-      _controller = YoutubePlayerController(
+      widget._controller = YoutubePlayerController(
         initialVideoId: yLink,
         flags: YoutubePlayerFlags(
-          autoPlay: true,
-          mute: true,
+          autoPlay: false,
+          mute: false,
         ),
       );
     } else
@@ -245,7 +247,7 @@ class _EventItemState extends State<EventItem> {
             widget.archetype == "Youtube" && widget.showVid == true
                 ? YoutubePlayerBuilder(
                     player: YoutubePlayer(
-                      controller: _controller,
+                      controller: widget._controller,
                       showVideoProgressIndicator: true,
                     ),
                     builder: (context, player) {
