@@ -36,6 +36,8 @@ dependencies:
   flutter_web_browser: ^0.14.0
   youtube_player_flutter: ^8.0.0
   youtube_player_iframe: ^2.1.0
+  webview_flutter: ^2.0.9
+  flutter_youtube_view: ^2.0.1
   
 
 

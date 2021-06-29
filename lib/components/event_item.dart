@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:amcham_app_v2/screens/single_event_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amcham_app_v2/constants.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 import 'get_firebase_image.dart';
 import 'package:amcham_app_v2/scripts/member_checker.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_youtube_view/flutter_youtube_view.dart';
 
 class EventItem extends StatefulWidget {
   final int? price;
@@ -98,9 +102,6 @@ class EventItem extends StatefulWidget {
     return points;
   }
 
-  YoutubePlayerController _controller =
-      YoutubePlayerController(initialVideoId: "QRWijH8KNFU");
-
   String DateToString(int? numberDate) {
     String strNumberDate = numberDate.toString();
     String year = strNumberDate.substring(0, 4);
@@ -142,19 +143,12 @@ class EventItem extends StatefulWidget {
 
 class _EventItemState extends State<EventItem> {
   MemberChecker memberChecker = new MemberChecker();
+  String yID = "QRWijH8KNFU";
 
   @override
   void initState() {
     if (widget.archetype == "Youtube" && widget.showVid == true) {
-      String yLink = YoutubePlayer.convertUrlToId(widget.youtube_link!)!;
-      print("Link = " + yLink);
-      widget._controller = YoutubePlayerController(
-        initialVideoId: yLink,
-        flags: YoutubePlayerFlags(
-          autoPlay: false,
-          mute: false,
-        ),
-      );
+      yID = YoutubePlayer.convertUrlToId(widget.youtube_link!)!;
     } else
       print("no vid");
     super.initState();
@@ -245,20 +239,32 @@ class _EventItemState extends State<EventItem> {
 
             //TODO put container here
             widget.archetype == "Youtube" && widget.showVid == true
-                ? YoutubePlayerBuilder(
-                    player: YoutubePlayer(
-                      controller: widget._controller,
-                      showVideoProgressIndicator: true,
-                    ),
-                    builder: (context, player) {
-                      return Column(
-                        children: [
-                          // some widgets
-                          player,
-                          //some other widgets
-                        ],
-                      );
-                    })
+                ? Container(
+                    //color: Colors.black,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width * (9 / 16),
+                    child: InAppWebView(
+                        initialUrlRequest: URLRequest(
+                      url: Uri.parse("https://www.youtube.com/embed/" + yID),
+                    )))
+
+                // onWebViewCreated: (controller) {
+                //   webViewController = controller;
+                // },
+                // YoutubePlayerBuilder(
+                //     player: YoutubePlayer(
+                //       controller: widget._controller,
+                //       showVideoProgressIndicator: true,
+                //     ),
+                //     builder: (context, player) {
+                //       return Column(
+                //         children: [
+                //           // some widgets
+                //           player,
+                //           //some other widgets
+                //         ],
+                //       );
+                //     })
                 :
                 //     :
 

@@ -131,49 +131,52 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       appBar: AppBar(
         backgroundColor: Constants.blueThemeColor,
       ),
-      floatingActionButton: RoundedButton(
-        title: (item.isMembersOnly == true &&
-                MemberChecker().checkIfMember(userEmail) == false)
-            ? 'Members Only '
-            : (getDateTimeInt() < getCurrentDateTimeInt() &&
-                    item.archetype == "MS Teams")
-                ? 'Not Available Yet'
-                : (getDateTimeInt() < getCurrentDateTimeInt())
-                    ? "Watch it again"
-                    : checkOwnedEvent() == true
-                        ? 'Registered'
-                        : item.price == 0
-                            ? 'Register: FREE'
-                            : MemberChecker().checkIfMember(userEmail)
-                                ? 'Register: FREE'
-                                : 'Register: R${item.price}',
-        onPressed: () {
-          if (item.isMembersOnly == true &&
-              MemberChecker().checkIfMember(userEmail) == false) {
-            return;
-          }
-          if (getDateTimeInt() < getCurrentDateTimeInt() &&
-              item.archetype == "MS Teams") {
-            return;
-          }
-          Navigator.push(
-            //push with price and event ID
-            context,
-            MaterialPageRoute(
-              builder: (context) => EventRegisterScreen(
-                id: item.id,
-                eventItem: item,
-                isEventAlreadyOwned: checkOwnedEvent(),
-                isPastEvent: getDateTimeInt() < getCurrentDateTimeInt(),
-              ),
+      floatingActionButton: getDateTimeInt() < getCurrentDateTimeInt() &&
+              item.archetype == "Youtube"
+          ? SizedBox()
+          : RoundedButton(
+              title: (item.isMembersOnly == true &&
+                      MemberChecker().checkIfMember(userEmail) == false)
+                  ? 'Members Only '
+                  : (getDateTimeInt() < getCurrentDateTimeInt() &&
+                          item.archetype == "MS Teams")
+                      ? 'Not Available Yet'
+                      : (getDateTimeInt() < getCurrentDateTimeInt())
+                          ? "Watch it again"
+                          : checkOwnedEvent() == true
+                              ? 'Registered'
+                              : item.price == 0
+                                  ? 'Register: FREE'
+                                  : MemberChecker().checkIfMember(userEmail)
+                                      ? 'Register: FREE'
+                                      : 'Register: R${item.price}',
+              onPressed: () {
+                if (item.isMembersOnly == true &&
+                    MemberChecker().checkIfMember(userEmail) == false) {
+                  return;
+                }
+                if (getDateTimeInt() < getCurrentDateTimeInt() &&
+                    item.archetype == "MS Teams") {
+                  return;
+                }
+                Navigator.push(
+                  //push with price and event ID
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventRegisterScreen(
+                      id: item.id,
+                      eventItem: item,
+                      isEventAlreadyOwned: checkOwnedEvent(),
+                      isPastEvent: getDateTimeInt() < getCurrentDateTimeInt(),
+                    ),
+                  ),
+                );
+              },
+              radius: 10,
+              width: 350,
+              colour: Constants.blueThemeColor,
+              textStyle: TextStyle(color: Colors.white),
             ),
-          );
-        },
-        radius: 10,
-        width: 350,
-        colour: Constants.blueThemeColor,
-        textStyle: TextStyle(color: Colors.white),
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Column(
         children: [

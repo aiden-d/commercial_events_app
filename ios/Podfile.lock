@@ -81,6 +81,9 @@ PODS:
     - OrderedSet (~> 5.0)
   - flutter_web_browser (0.14.0):
     - Flutter
+  - flutter_youtube_view (1.1.4):
+    - Flutter
+    - YoutubeKit
   - GoogleDataTransport (9.0.1):
     - GoogleUtilities/Environment (~> 7.2)
     - nanopb (~> 2.30908.0)
@@ -118,6 +121,7 @@ PODS:
     - Flutter
   - webview_flutter (0.0.1):
     - Flutter
+  - YoutubeKit (0.5.0)
 
 DEPENDENCIES:
   - add_2_calendar (from `.symlinks/plugins/add_2_calendar/ios`)
@@ -130,6 +134,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - flutter_web_browser (from `.symlinks/plugins/flutter_web_browser/ios`)
+  - flutter_youtube_view (from `.symlinks/plugins/flutter_youtube_view/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - share (from `.symlinks/plugins/share/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -150,6 +155,7 @@ SPEC REPOS:
     - nanopb
     - OrderedSet
     - PromisesObjC
+    - YoutubeKit
 
 EXTERNAL SOURCES:
   add_2_calendar:
@@ -173,6 +179,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_inappwebview/ios"
   flutter_web_browser:
     :path: ".symlinks/plugins/flutter_web_browser/ios"
+  flutter_youtube_view:
+    :path: ".symlinks/plugins/flutter_youtube_view/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   share:
@@ -205,6 +213,7 @@ SPEC CHECKSUMS:
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
   flutter_web_browser: a719eca01d00bdc9a0e13e42194f86b90a5b8729
+  flutter_youtube_view: ea93f139b374c5e2b869b3e84190c4ba9668601b
   GoogleDataTransport: 04c3e9a480bbcaa2ec3f5d27f1cdeb6a92f20c8d
   GoogleUtilities: 45dbb24a7f351d69d0a601482b39ad6c32e30dab
   GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
@@ -215,6 +224,7 @@ SPEC CHECKSUMS:
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
+  YoutubeKit: 9f66eba839211158f2aac7ad3833593bd56fa8f9
 
 PODFILE CHECKSUM: bcbe1f82cc9348cd3be9129f2b774cb4b5939089
 
