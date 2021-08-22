@@ -247,42 +247,7 @@ class _EventItemState extends State<EventItem> {
                         initialUrlRequest: URLRequest(
                       url: Uri.parse("https://www.youtube.com/embed/" + yID),
                     )))
-
-                // onWebViewCreated: (controller) {
-                //   webViewController = controller;
-                // },
-                // YoutubePlayerBuilder(
-                //     player: YoutubePlayer(
-                //       controller: widget._controller,
-                //       showVideoProgressIndicator: true,
-                //     ),
-                //     builder: (context, player) {
-                //       return Column(
-                //         children: [
-                //           // some widgets
-                //           player,
-                //           //some other widgets
-                //         ],
-                //       );
-                //     })
-                :
-                //     :
-
-                //     ? YoutubePlayerIFrame(
-                //         controller: _controller,
-                //         // YoutubePlayerController(
-                //         //   initialVideoId:
-                //         //       youtube_link.substring(32, youtube_link.length),
-                //         //   params: YoutubePlayerParams(
-                //         //     autoPlay: false,
-                //         //     showControls: true,
-                //         //     showFullscreenButton: true,
-                //         //   ),
-                //         // ),
-                //         aspectRatio: 16 / 9,
-                //       )
-                //     :
-                Padding(
+                : Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: LoadFirebaseStorageImage(imageRef: widget.imageRef)),
             widget.hideSummary == true ? SizedBox() : Text(widget.summary!),

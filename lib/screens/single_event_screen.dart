@@ -178,57 +178,49 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
               textStyle: TextStyle(color: Colors.white),
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Column(
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         children: [
-          Container(
-            child: ListView(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
+          item,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                item,
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isInfoActive = true;
-                          });
-                        },
-                        child: Container(
-                          child: Text('Info'),
-                          decoration: isInfoActive
-                              ? activeDecoration
-                              : inActiveDecoration,
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isInfoActive = false;
-                          });
-                        },
-                        child: Container(
-                          child: Text('Speakers'),
-                          decoration: isInfoActive
-                              ? inActiveDecoration
-                              : activeDecoration,
-                        ),
-                      ),
-                    ],
+                FlatButton(
+                  onPressed: () {
+                    setState(() {
+                      isInfoActive = true;
+                    });
+                  },
+                  child: Container(
+                    child: Text('Info'),
+                    decoration:
+                        isInfoActive ? activeDecoration : inActiveDecoration,
                   ),
                 ),
-                isInfoActive
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(item.info!),
-                      )
-                    : speakersList,
+                FlatButton(
+                  onPressed: () {
+                    setState(() {
+                      isInfoActive = false;
+                    });
+                  },
+                  child: Container(
+                    child: Text('Speakers'),
+                    decoration:
+                        isInfoActive ? inActiveDecoration : activeDecoration,
+                  ),
+                ),
               ],
             ),
           ),
+          isInfoActive
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(item.info!),
+                )
+              : speakersList,
         ],
       ),
     );
