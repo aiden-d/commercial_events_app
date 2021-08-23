@@ -308,7 +308,7 @@ class EventsStream extends StatelessWidget {
       required this.isSearching,
       required this.searchHash});
 
-  EventItem getItem(Map<String, dynamic> data, String id) {
+  static EventItem getItem(Map<String, dynamic> data, String id) {
     return new EventItem(
       youtube_link: data['youtube_link'],
       price: data['price'],

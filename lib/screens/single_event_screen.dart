@@ -1,7 +1,12 @@
+import 'package:amcham_app_v2/components/alert_dialog_builder.dart';
+import 'package:amcham_app_v2/components/dialogs.dart';
 import 'package:amcham_app_v2/components/event_item.dart';
+import 'package:amcham_app_v2/components/event_register_components.dart';
 import 'package:amcham_app_v2/components/rounded_button.dart';
 import 'package:amcham_app_v2/constants.dart';
+import 'package:amcham_app_v2/screens/events_screen.dart';
 import 'package:amcham_app_v2/scripts/member_checker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'event_register_screen.dart';
@@ -9,13 +14,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class SingleEventScreen extends StatefulWidget {
-  String testStr = '';
   final EventItem item;
   String DateToString(int numberDate) {
     String strNumberDate = numberDate.toString();
     String year = strNumberDate.substring(0, 4);
     String month = strNumberDate.substring(4, 6);
     int monthInt = int.parse(month);
+
     List<String> dates = [
       'January',
       'February',
@@ -48,15 +53,17 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     ),
   );
   BoxDecoration inActiveDecoration = BoxDecoration();
-
+  bool refreshEvents = false;
   bool isInfoActive = true;
+  bool? addtoCalendarBool = true;
 
-  final EventItem item;
+  EventItem item;
   @override
   void initState() {
     setState(() {
       item.showVid = true;
     });
+
     BoxDecoration activeDecoration = BoxDecoration(
       border: Border(
         bottom: BorderSide(width: 2, color: Colors.lightBlue.shade900),
@@ -87,6 +94,30 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     super.initState();
   }
 
+  Future<void> _alertDialogBuilder(
+      String title, String info, Function? closeFunction) async {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title != null ? title : "Error"),
+            content: Container(
+              child: Text(info),
+            ),
+            actions: [
+              FlatButton(
+                  onPressed: closeFunction != null
+                      ? closeFunction as void Function()?
+                      : () {
+                          Navigator.pop(context);
+                        },
+                  child: Text("Close Dialog"))
+            ],
+          );
+        });
+  }
+
   String? userEmail = FirebaseAuth.instance.currentUser!.email;
   bool checkOwnedEvent() {
     if (item.registeredUsers == null) {
@@ -100,6 +131,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
         return true;
       }
     }
+    print("event is not owned");
     return false;
   }
 
@@ -124,53 +156,153 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   SpeakersList speakersList = new SpeakersList(
     speakers: ["SPEAKERS LOADING"],
   );
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Constants.blueThemeColor,
+        leading: MaterialButton(
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            refreshEvents == true
+                ? Navigator.popAndPushNamed(context, '/events')
+                : Navigator.pop(context);
+          },
+        ),
       ),
       floatingActionButton: getDateTimeInt() < getCurrentDateTimeInt() &&
               item.archetype == "Youtube"
           ? SizedBox()
           : RoundedButton(
-              title: (item.isMembersOnly == true &&
-                      MemberChecker().checkIfMember(userEmail) == false)
-                  ? 'Members Only '
-                  : (getDateTimeInt() < getCurrentDateTimeInt() &&
-                          item.archetype == "MS Teams")
-                      ? 'Not Available Yet'
-                      : (getDateTimeInt() < getCurrentDateTimeInt())
-                          ? "Watch it again"
-                          : checkOwnedEvent() == true
-                              ? 'Registered'
-                              : item.price == 0
-                                  ? 'Register: FREE'
-                                  : MemberChecker().checkIfMember(userEmail)
-                                      ? 'Register: FREE'
-                                      : 'Register: R${item.price}',
+              title: item.archetype == "Youtube"
+                  ? checkOwnedEvent() == true
+                      ? "Open Livesteam Link"
+                      : "Add To Calendar"
+                  : item.archetype == "MS Teams"
+                      ? (getDateTimeInt() < getCurrentDateTimeInt())
+                          ? 'Recording Not Available'
+                          : (item.isMembersOnly == true &&
+                                  MemberChecker().checkIfMember(userEmail) ==
+                                      false)
+                              ? 'Members Only'
+                              : checkOwnedEvent() == true
+                                  ? 'Open Teams Link'
+                                  : 'Sign Up for Teams Event'
+                      : "" //impliment for paid event
+              ,
               onPressed: () {
+                if (item.archetype == "MS Teams" &&
+                    getDateTimeInt() < getCurrentDateTimeInt()) {
+                  return null;
+                }
                 if (item.isMembersOnly == true &&
                     MemberChecker().checkIfMember(userEmail) == false) {
-                  return;
+                  return null;
                 }
-                if (getDateTimeInt() < getCurrentDateTimeInt() &&
+                if (item.archetype == "Youtube" ||
                     item.archetype == "MS Teams") {
-                  return;
+                  if (checkOwnedEvent()) {
+                    return EventRegisterComponents.openURL(item);
+                  }
+                  return showDialog(
+                      context: context,
+                      builder: (context) {
+                        bool isLoading = false;
+                        return AlertDialog(
+                          title: Row(
+                            children: [Text("Complete Registration")],
+                          ),
+                          content: Row(
+                            children: [
+                              Text("Add to device calendar: "),
+                              Checkbox(
+                                value: addtoCalendarBool,
+                                onChanged: (val) {
+                                  setState(() {
+                                    addtoCalendarBool = val;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            MaterialButton(
+                                child: Text("Cancel"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            MaterialButton(
+                                child: Text("Proceed"),
+                                onPressed: () async {
+                                  setState(() {
+                                    Dialogs.showLoadingDialog(
+                                        context, _keyLoader);
+                                    print(
+                                        "is loading = " + isLoading.toString());
+                                  });
+                                  print('attempting to update user');
+                                  await EventRegisterComponents.updateUser(
+                                      item.id);
+                                  print('attempting to update event');
+                                  await EventRegisterComponents.updateEvent(
+                                      item.id);
+                                  await EventRegisterComponents.sendEmail(item);
+                                  if (addtoCalendarBool == true) {
+                                    EventRegisterComponents.addToCalendar(item);
+                                  }
+                                  var store = FirebaseFirestore.instance;
+                                  var doc = await store
+                                      .collection("Events")
+                                      .doc(item.id)
+                                      .get();
+                                  var data = doc.data();
+
+                                  setState(() {
+                                    refreshEvents = true;
+                                    item = EventsStream.getItem(data!, item.id);
+                                    item.showInfo = true;
+                                    item.hideSummary = true;
+                                    if (item.archetype == "Youtube")
+                                      item.showVid = true;
+                                    item.isButton = false;
+                                  });
+                                  Navigator.of(_keyLoader.currentContext!,
+                                          rootNavigator: true)
+                                      .pop();
+
+                                  isLoading = false;
+                                  await _alertDialogBuilder("Finished",
+                                      "Thank you for registering for ${item.title}, please check your email (and spam) for more info!",
+                                      () {
+                                    Navigator.pop(context);
+                                  });
+
+                                  Navigator.pop(context);
+                                }),
+                          ],
+                        );
+                      });
+                } else {
+                  EventRegisterComponents.openURL(item);
                 }
-                Navigator.push(
-                  //push with price and event ID
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventRegisterScreen(
-                      id: item.id,
-                      eventItem: item,
-                      isEventAlreadyOwned: checkOwnedEvent(),
-                      isPastEvent: getDateTimeInt() < getCurrentDateTimeInt(),
-                    ),
-                  ),
-                );
+
+                // Navigator.push(
+                //   //push with price and event ID
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => EventRegisterScreen(
+                //       id: item.id,
+                //       eventItem: item,
+                //       isEventAlreadyOwned: checkOwnedEvent(),
+                //       isPastEvent: getDateTimeInt() < getCurrentDateTimeInt(),
+                //     ),
+                //   ),
+                // );
               },
               radius: 10,
               width: 350,
@@ -221,6 +353,9 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                   child: Text(item.info!),
                 )
               : speakersList,
+          SizedBox(
+            height: 150,
+          )
         ],
       ),
     );

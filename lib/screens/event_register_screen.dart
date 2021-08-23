@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:amcham_app_v2/components/event_register_components.dart';
 import 'package:amcham_app_v2/scripts/member_checker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amcham_app_v2/components/event_item.dart';
@@ -30,6 +31,7 @@ class EventRegisterScreen extends StatefulWidget {
     required this.isEventAlreadyOwned,
     required this.isPastEvent,
   });
+
   @override
   _EventRegisterScreenState createState() => _EventRegisterScreenState(
       id: id,
@@ -62,124 +64,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
       FirebaseFirestore.instance.collection('Events');
   String? userEmail = FirebaseAuth.instance.currentUser!.email;
 
-  bool isThereDuplicate(List<dynamic> array, var itemToCheck) {
-    for (var item in array) {
-      if (item == itemToCheck) {
-        return true;
-      }
-      return false;
-    }
-    return false;
-  }
-
-  Future<void> updateUser() async {
-    List<dynamic>? ownedEvents;
-
-//TODO validate so there is no duplicates
-    await userInfo
-        .doc(userEmail)
-        .get()
-        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-      if (documentSnapshot.exists) {
-        ownedEvents = documentSnapshot.data()!['owned_events'];
-        if (ownedEvents != null) {
-          if (isThereDuplicate(ownedEvents!, id)) {
-            print('User already added');
-            return null;
-            //TODO show error
-          } else {
-            ownedEvents!.add(id);
-          }
-        } else {
-          ownedEvents = [id];
-        }
-      } else {
-        print('an error occured');
-        //TODO show error
-        return;
-      }
-    });
-
-    return userInfo
-        .doc(userEmail)
-        .update({'owned_events': ownedEvents})
-        .then((value) => print("User Updated"))
-        .catchError((error) => print("Failed to update user: $error"));
-  }
-
-  Future<void> updateEvent() async {
-    String? userEmail = FirebaseAuth.instance.currentUser!.email;
-    List<dynamic>? registeredUsers;
-
-//TODO validate so there is no duplicates
-    await eventsInfo
-        .doc(id)
-        .get()
-        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-      if (documentSnapshot.exists) {
-        registeredUsers = documentSnapshot.data()!['registered_users'];
-        if (registeredUsers != null) {
-          if (isThereDuplicate(registeredUsers!, userEmail)) {
-            print('User already added');
-            return null;
-          } else {
-            registeredUsers!.add(userEmail);
-          }
-        } else {
-          registeredUsers = [userEmail];
-        }
-      } else {
-        print('an error occured');
-        //TODO show error
-        return;
-      }
-    });
-
-    return eventsInfo
-        .doc(id)
-        .update({'registered_users': registeredUsers})
-        .then((value) => print("Events Updated"))
-        .catchError((error) => print("Failed to update events: $error"));
-  }
-
-  Future<void> sendEmail() async {
-    int? dateInt = eventItem.date;
-    int? timeInt = eventItem.startTime;
-    String date = eventItem.DateToString(dateInt) +
-        ' at ' +
-        eventItem.TimeToString(timeInt);
-    var res = await http.get(Uri.parse(
-        'https://us-central1-amcham-app.cloudfunctions.net/sendMail?dest=$userEmail&subject=Thank you for signing up for ${eventItem.title}&message=Thank you for signing up for <b> ${eventItem.title}  </br> <br>Please access the event on the date: <b> $date </b> </b> <br><br> <b> With the link (if clicking on the link does not work please copy and paste it into the browser): </b> <br> <a href="${eventItem.link}">This Link</a></b><br></br>${eventItem.link}'));
-    print(res.body);
-  }
-
-  _launchURL() async {
-    String? url;
-    if (eventItem.archetype != "Youtube") {
-      url = eventItem.link;
-    }
-
-    if (await canLaunch(url!)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  void addToCalendar() async {
-    Event event = Event(
-      title: eventItem.title!,
-      description: '${eventItem.link}',
-      startDate: getDateFromItem(eventItem.startTime),
-      endDate: getDateFromItem(eventItem.endTime),
-    );
-    print('adding to calendar');
-    await Add2Calendar.addEvent2Cal(event);
-    print('added to calendar');
-    return;
-  }
-
-  DateTime getDateFromItem(int? time) {
+  static DateTime getDateFromItem(int? time, EventItem eventItem) {
     String dateStr = eventItem.date.toString();
     String timeStr =
         time.toString().length >= 4 ? time.toString() : '0' + time.toString();
@@ -265,7 +150,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
           timer.cancel();
         });
         if (addtoCalendarBool!) {
-          addToCalendar();
+          EventRegisterComponents.addToCalendar(eventItem);
         }
         await _alertDialogBuilder('Payment Success!',
             'Thank you for your purchase, you can now access the info by clicking on the event',
@@ -287,7 +172,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
     });
   }
 
-  bool? addtoCalendarBool = false;
+  bool? addtoCalendarBool = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -405,15 +290,15 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                             } else {
                               //add event ID to user account storage on firebase
                               print('attempting to update user');
-                              await updateUser();
+                              await EventRegisterComponents.updateUser(id);
                               print('attempting to update event');
-                              await updateEvent();
+                              await EventRegisterComponents.updateEvent(id);
                               print('sending email');
                             }
 
-                            await sendEmail();
+                            await EventRegisterComponents.sendEmail(eventItem);
                             if (addtoCalendarBool == true) {
-                              addToCalendar();
+                              EventRegisterComponents.addToCalendar(eventItem);
                             }
                             await _alertDialogBuilder(
                                 'Sent',
@@ -443,19 +328,19 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.topLeft,
+                  //   child: IconButton(
+                  //     icon: Icon(
+                  //       Icons.arrow_back,
+                  //       size: 40,
+                  //       color: Colors.white,
+                  //     ),
+                  //     onPressed: () {
+                  //       Navigator.pop(context);
+                  //     },
+                  //   ),
+                  // ),
                   Expanded(child: SizedBox()),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -482,7 +367,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                             //add event ID to user account storage on firebase
 
                             print('sending email');
-                            await sendEmail();
+                            await EventRegisterComponents.sendEmail(eventItem);
 
                             //send email and pop to previous screen
 
@@ -494,7 +379,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                   RoundedButton(
                     title: 'Open Link',
                     isLoading: isMidLoading,
-                    onPressed: _launchURL,
+                    onPressed: EventRegisterComponents.openURL(eventItem),
                   ),
                   (isPastEvent == true)
                       ? SizedBox()
@@ -508,7 +393,7 @@ class _EventRegisterScreenState extends State<EventRegisterScreen> {
                             //add event ID to user account storage on firebase
 
                             print('adding to calendar');
-                            addToCalendar();
+                            EventRegisterComponents.addToCalendar(eventItem);
 
                             //send email and pop to previous screen
 

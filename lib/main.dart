@@ -1,3 +1,4 @@
+import 'package:amcham_app_v2/screens/events_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/landing_page.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
             child: child!,
           );
         },
+        routes: {'/events': (context) => EventsScreen(isPastEvents: false)},
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'PublicSans'),
         home: LandingPage());
