@@ -226,12 +226,21 @@ class NewsStream extends StatelessWidget {
             }
           }
 
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: newsItems,
-            ),
-          );
+          return newsItems.length != 0
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: newsItems,
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Center(
+                      child: Text(
+                    "No News",
+                    style: Constants.regularHeading,
+                  )),
+                );
         }
         return Center(
           child: CircularProgressIndicator(

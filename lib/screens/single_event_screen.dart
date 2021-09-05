@@ -193,9 +193,12 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                               : checkOwnedEvent() == true
                                   ? 'Open Teams Link'
                                   : 'Sign Up for Teams Event'
-                      : "" //impliment for paid event
+                      : "Open Link to Event" //impliment for paid event
               ,
               onPressed: () {
+                if (item.archetype == "External Event") {
+                  return EventRegisterComponents.openURL(item);
+                }
                 if (item.archetype == "MS Teams" &&
                     getDateTimeInt() < getCurrentDateTimeInt()) {
                   return null;

@@ -102,6 +102,23 @@ class EventItem extends StatefulWidget {
     return points;
   }
 
+  int getDateTimeInt() {
+    int val = int.parse(date.toString());
+    print('int date time = ' + val.toString());
+    return val;
+  }
+
+  int getCurrentDateTimeInt() {
+    DateTime now = DateTime.now();
+    int val = int.parse(now.year.toString() +
+        (now.month > 9 ? now.month.toString() : '0' + now.month.toString()) +
+        (now.day > 9 ? now.day.toString() : '0' + now.day.toString()) +
+        (now.hour > 9 ? now.hour.toString() : '0' + now.hour.toString()) +
+        (now.minute > 9 ? now.minute.toString() : '0' + now.minute.toString()));
+    print('current int date time = $val');
+    return val;
+  }
+
   String DateToString(int? numberDate) {
     String strNumberDate = numberDate.toString();
     String year = strNumberDate.substring(0, 4);
@@ -211,8 +228,18 @@ class _EventItemState extends State<EventItem> {
                           fontSize: widget.title!.length > 25 ? 16 : 19),
                     ),
                   ),
+                  SizedBox(
+                    width: 5,
+                  ),
                   Text(
-                    widget.type!,
+                    widget.archetype != "External Event"
+                        ? widget.archetype == "Youtube"
+                            ? widget.getDateTimeInt() <
+                                    widget.getCurrentDateTimeInt()
+                                ? "Recording"
+                                : "Livestream"
+                            : widget.archetype!
+                        : widget.type!,
                     style: TextStyle(
                         color: Constants.blueThemeColor, fontSize: 16),
                   ),

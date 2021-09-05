@@ -133,9 +133,12 @@ class NewsItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title!,
-                    style: Constants.regularHeading,
+                  Flexible(
+                    child: Text(
+                      title!,
+                      style: Constants.regularHeading
+                          .copyWith(fontSize: title!.length > 25 ? 16 : 19),
+                    ),
                   ),
                 ],
               ),
