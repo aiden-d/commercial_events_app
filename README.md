@@ -2,7 +2,7 @@
 
 # Description
 
-This is the source code for an events app made for a client when I was 16-17.
+This is the source code for an events app made for a well-known client when I was 16-17.
 
 They ended up not using the application but was a great learning experience, so I decided to upload the source code here.
 
@@ -17,13 +17,13 @@ Make sure you have Flutter installed, see [here](https://docs.flutter.dev/get-st
 
 Clone the repo
 ```bash
-git clone git@github.com:aiden-d/events_app.git
+git clone git@github.com:aiden-d/commercial_events_app.git
 ```
 
 Navigate into the directory
 
 ```bash
-cd events_app
+cd commercial_events_app
 ```
 
 Install Flutter dependencies
